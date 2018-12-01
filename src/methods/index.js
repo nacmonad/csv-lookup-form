@@ -17,7 +17,7 @@ export const parseTableFromRange = (rangeString, sheet) => {
             ];
             if( typeof nextCell === 'undefined' ){
                row.push(void 0);
-            } else row.push(nextCell.w);
+            } else row.push(nextCell.v);
          }
          activeTable.push(row);
      }

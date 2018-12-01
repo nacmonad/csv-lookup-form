@@ -12,16 +12,15 @@ const styles = {
 
     },
     textField:{
+      width:'5.5rem',
       margin:'0 0.5rem'
     }
 }
 
 export default withStyles(styles)((props) => {
     const {classes, dimensions, handleChange, maxWidth, maxHeight} = props;
-    console.log("dims:")
-    console.log(dimensions)
-    console.log(`maxWidth maxHeight ${maxWidth}x${maxHeight}`)
-
+    console.log(maxWidth)
+    console.log(maxHeight)
     return (
     <div className={classes.root}>
         <TextField
