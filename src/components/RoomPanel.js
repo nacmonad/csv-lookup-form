@@ -86,6 +86,7 @@ class RoomPanel extends Component {
           </Tabs>
            <div className={classes.container}>
                <div className={classes.row}>
+                 <div style={{display:'flex', alignItems:'center'}}>
                   <TextField
                     className={classNames(classes.textField, classes.nameField)}
                     id="room-name"
@@ -93,7 +94,10 @@ class RoomPanel extends Component {
                     value={rooms[selectedRoom].name}
                     onChange={handleChange}
                     />
-
+                  <Button className={classes.fab} disabled={rooms.length < 2} onClick={handleClick} id="remove-room" size="small" variant="fab">
+                      <RemoveIcon onClick={handleClick}></RemoveIcon>
+                    </Button>
+                  </div>
               </div>
               <TextField
                 id="room-description"

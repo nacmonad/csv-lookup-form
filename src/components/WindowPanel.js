@@ -88,13 +88,18 @@ class WindowPanel extends Component {
           </Tabs>
           <div className={classes.container}>
               <div className={classes.row}>
-                 <TextField
-                   className={classNames(classes.textField, classes.nameField)}
-                   id="window-name"
-                   label="Name"
-                   value={windows[selectedWindow].name}
-                   onChange={handleChange}
-                   />
+                 <div style={{display:'flex', alignItems:'center'}}>
+                   <TextField
+                     className={classNames(classes.textField, classes.nameField)}
+                     id="window-name"
+                     label="Name"
+                     value={windows[selectedWindow].name}
+                     onChange={handleChange}
+                     />
+                   <Button className={classes.fab} onClick={handleClick} disabled={windows.length <2} id="remove-window" size="small" variant="fab">
+                         <RemoveIcon onClick={handleClick}></RemoveIcon>
+                    </Button>
+                 </div>
 
              </div>
              <TextField

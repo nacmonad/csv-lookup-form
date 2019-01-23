@@ -58,6 +58,7 @@ class TextileForm extends Component {
     let formCopy = {...this.props.form}
     //let thisWindow = formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow];
     switch(e.target.id) {
+
       case "project-name":
         formCopy.projectName = e.target.value
         this.props.setForm(formCopy)
@@ -127,11 +128,24 @@ class TextileForm extends Component {
         console.log(e.target)
     }
   }
-  _handleClick(e){
+  _handleClick(e, v){
     console.log(e.target.id)
     let formCopy = {...this.props.form}
 
     switch(e.target.id) {
+      case "remove-room":
+        formCopy.rooms.splice(formCopy.selectedRoom,1);
+        formCopy.selectedRoom = 0;
+        formCopy.selectedWindow = 0;
+        this.props.setForm(formCopy)
+
+        break;
+      case "remove-window":
+        formCopy.rooms[formCopy.selectedRoom].windows.splice(formCopy.selectedWindow,1);
+        formCopy.selectedWindow = 0;
+        this.props.setForm(formCopy)
+
+        break;
       case "add-room":
         formCopy.rooms.push({
           id:shortid.generate(),
