@@ -4,15 +4,8 @@ const id = shortid.generate();
 const initialState = {
     projectId: id,
     projectName: `project-${id}`,
-    dimensions: {
-      units: 'inches',
-      height: 30,
-      width: 30
-    },
     selectedWorksheet:'',
     worksheets:[],
-    selectedPriceGroup: "PG1",
-    selectedFabric: "Cottonwood",
     fabricToPriceGroupMapping: {
       "Cottonwood":"PG1",
       "Linen":"PG1",
@@ -96,20 +89,20 @@ const initialState = {
             height: 30,
             width: 30
           },
-          selectedValance:'R Valance',
+          selectedValanceOption:'Decora 8',
           selectedWorksheet:'Roller',
           selectedFabric:'Cottonwood',
           selectedPriceGroup:'PG1',
-          showValance:'false',
+          showValance:false,
           total:155.95
         }
       ]
     }],
     selectedRoom: 0,
     selectedWindow: 0,
+    selectedValance: 'R Valance',
     valances:["R Valance", "V Valance", "I Valance"],
     valanceMap:["A1:S13","A1:S7","A1:S4"],
-    selectedValanceOption:"",
     valanceOptions: [],
 }
 

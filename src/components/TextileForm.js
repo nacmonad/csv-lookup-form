@@ -89,7 +89,7 @@ class TextileForm extends Component {
         break;
       case "worksheet":
         formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedWorksheet = e.target.value
-        formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedValance = `${e.target.value.charAt(0).toUpperCase()} Valance`
+        formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedValanceOption = `${e.target.value.charAt(0).toUpperCase()} Valance`
         this.props.setForm(formCopy)
         break;
       case "fabric":
@@ -102,9 +102,14 @@ class TextileForm extends Component {
         this.props.setForm(formCopy)
         break;
       case "toggle-valance":
-        this.props.setForm({ ...formCopy, showValance:!formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].showValance })
+        formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].showValance = !formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].showValance
+        //formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedValanceOption = 'R Valance'
+        this.props.setForm(formCopy)
         break;
       case "valance":
+        console.log("valence ch ange!")
+        console.log(formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow])
+        console.log(e.target.value)
         formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedValanceOption = e.target.value;
         this.props.setForm(formCopy)
         break;
@@ -141,7 +146,7 @@ class TextileForm extends Component {
               height: 30,
               width: 30
             },
-            selectedValence:'R Valance',
+            selectedValanceOption:'Decora 8',
             selectedWorksheet:'Roller',
             selectedFabric:'Cottonwood',
             selectedPriceGroup:'PG1',
@@ -162,7 +167,7 @@ class TextileForm extends Component {
             width:30,
             height:30
           },
-          selectedValence:'R Valance',
+          selectedValanceOption:'Decora 8',
           selectedWorksheet:'Roller',
           selectedFabric:'Cottonwood',
           selectedPriceGroup:'PG1',
@@ -178,6 +183,10 @@ class TextileForm extends Component {
   }
   _calculateTotal(dim, at, vt) {
     //this is bound to the scope!
+    console.log("calculatin ")
+    console.log(dim)
+    console.log(at)
+    console.log(vt)
 
     let textileWidthInInches;
     let textileHeightInInches;
@@ -227,13 +236,15 @@ class TextileForm extends Component {
         let tempOptions = []
 
         //TODO: dont do this!
-        if(this.props.form.selectedValanceOption === '') this.props.form.selectedValanceOption = vt[1][0]
-
+        //if(this.props.form.rooms[this.props.form.selectedRoom].windows[this.props.form.selectedWindow].selectedValanceOption === '') this.props.form.rooms[this.props.form.selectedRoom].windows[this.props.form.selectedWindow].selectedValanceOption = vt[1][0]
+        console.log("making valance tables")
+        console.log(tableHeight)
+        console.log(vt)
         for(var i =1; i< tableHeight; i++ ) {
           //console.log()
           //console.log(vt[i][0] + " compared to " + this.props.form.selectedValanceOption)
           tempOptions.push(vt[i][0])
-          if(vt[i][0] === this.props.form.selectedValanceOption){
+          if(vt[i][0] === this.props.form.rooms[this.props.form.selectedRoom].windows[this.props.form.selectedWindow].selectedValanceOption){
             //console.log("found col match: " + i)
             findVRow = i;
           }
@@ -260,6 +271,7 @@ class TextileForm extends Component {
     const {classes, form, workbook} = this.props
     let activeTable = []
     let valanceTable = []
+    console.log("workbook:")
     console.log(workbook)
 
     if(typeof workbook.Sheets[form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedWorksheet] !== 'undefined' && form.priceGroups.findIndex(pg=>form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedPriceGroup) > -1) {
@@ -270,10 +282,12 @@ class TextileForm extends Component {
 
       if(form.rooms[form.selectedRoom].windows[form.selectedWindow].showValance) {
         console.log("fetching valance table...")
-        console.log(form.rooms[form.selectedRoom].windows[form.selectedWindow])
-        const vindex = form.valances.findIndex(v=>v===form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedValance)
+        console.log(form.selectedValance)
+        const vindex = form.valances.findIndex(v=>v===form.selectedValance)
+        console.log(vindex)
         const valanceRangeString = form.valanceMap[vindex]
-        valanceTable = parseTableFromRange(valanceRangeString, workbook.Sheets[form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedValance]);
+        console.log(valanceRangeString)
+        valanceTable = parseTableFromRange(valanceRangeString, workbook.Sheets[form.selectedValance]);
       }
 
     }
@@ -281,7 +295,9 @@ class TextileForm extends Component {
     //var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
     //   var json_object = JSON.stringify(XL_row_object);
 
-
+    console.log("active/valance table")
+    console.log(activeTable)
+    console.log(valanceTable)
     const windowTotal = this._calculateTotal(form.rooms[form.selectedRoom].windows[form.selectedWindow].dimensions, activeTable, valanceTable);
     form.rooms[form.selectedRoom].windows[form.selectedWindow].total = parseFloat(windowTotal);
     console.log("rooms")
@@ -357,13 +373,16 @@ class TextileForm extends Component {
               </div>)
           }
 
-          <AddValanceOption form={form} workbook={workbook} handleChange={this._handleChange.bind(this)}/>
+          <AddValanceOption
+            form={form}
+            window={form.rooms[form.selectedRoom].windows[form.selectedWindow]}
+            handleChange={this._handleChange.bind(this)}/>
 
           <div>
-            <Typography variant="display2"><b>Current Window Total:</b> {windowTotal} </Typography>
+            <Typography variant="display1"><b>Current Window Total:</b> {windowTotal} </Typography>
           </div>
           <div>
-            <Typography variant="display1"><b>Total:</b> {
+            <Typography variant="display2"><b>Total:</b> {
               grandTotal.toString()
           } </Typography>
           </div>

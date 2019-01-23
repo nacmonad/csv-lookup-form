@@ -33,27 +33,24 @@ const styles = {
   }
 }
 export default withStyles(styles)((props)=>{
-  const {classes, form, workbook, handleChange} = props
+  const {classes, form, window, handleChange} = props
   console.log("v form")
-  console.log(form)
+  console.log(form.valanceOptions)
+  console.log(window.selectedValanceOption)
   return (
     <div>
       <div className={classes.row}>
         <Typography variant="subtitle1">Valence Options</Typography>
-        <Button name="toggle-valance" className={classes.button} variant="fab" onClick={(e)=>{
-          handleChange({
-            target: {
-              name:'toggle-valance',
-            }
-          })
-        }}>{form.showValance ? <RemoveIcon></RemoveIcon>:<AddIcon></AddIcon>}</Button>
+        <Button name="toggle-valance" className={classes.button} variant="fab" onClick={handleChange}>
+          {window.showValance ? <RemoveIcon></RemoveIcon>:<AddIcon></AddIcon>}</Button>
       </div>
-      {form.showValance &&
+      {window.showValance &&
         <OutlinedDropdown
           title="Valance"
+          name="valance-option"
           helperText="Please select valance option"
           items={form.valanceOptions}
-          selectedItem={form.selectedValanceOption !== ""? form.selectedValanceOption : form.valanceOptions[0]}
+          selectedItem={window.selectedValanceOption !== "" ? window.selectedValanceOption : form.valanceOptions[0]}
           handleSelect={handleChange}
           />
       }
