@@ -295,19 +295,17 @@ class TextileForm extends Component {
     //var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
     //   var json_object = JSON.stringify(XL_row_object);
 
-    console.log("active/valance table")
-    console.log(activeTable)
-    console.log(valanceTable)
     const windowTotal = this._calculateTotal(form.rooms[form.selectedRoom].windows[form.selectedWindow].dimensions, activeTable, valanceTable);
-    form.rooms[form.selectedRoom].windows[form.selectedWindow].total = parseFloat(windowTotal);
+    form.rooms[form.selectedRoom].windows[form.selectedWindow].total = parseFloat(windowTotal);  //hardset formstate
+
     console.log("rooms")
     console.log(form.rooms)
     let windows = []
     let grandTotal = -1;
     if(form.rooms.length > 1) {
-      windows = form.rooms.reduce((r1,r2)=>{
-        return [...r1.windows, ...r2.windows];
-      });
+      windows = form.rooms.reduce((w,r2)=>{
+        return [...w, ...r2.windows];
+      }, []);
     } else {
       windows = form.rooms[0].windows;
       //grandTotal = windowTotal
