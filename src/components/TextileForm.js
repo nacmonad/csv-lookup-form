@@ -52,12 +52,12 @@ class TextileForm extends Component {
 
   }
   _handleChange(e, v) {
-    console.log(e.target)
+    console.log(e.target.id)
     console.log(e.target.value)
     console.log(v)
     let formCopy = {...this.props.form}
     //let thisWindow = formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow];
-    switch(e.target.name) {
+    switch(e.target.id) {
       case "project-name":
         formCopy.projectName = e.target.value
         this.props.setForm(formCopy)
@@ -320,7 +320,7 @@ class TextileForm extends Component {
         <div className={classes.root}>
           <Typography className={classes.typography} variant="title">Interactive Pricing Form</Typography>
           <Typography className={classes.typography} variant="subtitle1">Project Id.: {form.projectId}</Typography>
-          <TextField name="project-name" label="Project Name" value={form.projectName} onChange={this._handleChange.bind(this)}/>
+          <TextField id="project-name" label="Project Name" value={form.projectName} onChange={this._handleChange.bind(this)}/>
           <div className={classes.column}>
             <RoomPanel handleClick={this._handleClick.bind(this)} handleChange={this._handleChange.bind(this)} rooms={form.rooms} selectedRoom={form.selectedRoom}/>
             <WindowPanel handleClick={this._handleClick.bind(this)} handleChange={this._handleChange.bind(this)} windows={form.rooms[form.selectedRoom].windows} selectedWindow={form.selectedWindow}/>

@@ -65,7 +65,7 @@ class WindowPanel extends Component {
             <div style={{maxWidth:'12rem', textAlign:'center'}}>
               <Typography variant="subtitle2">Add a window</Typography>
               <Button className={classes.fab} onClick={handleClick} id="add-window" size="small" variant="fab">
-                <AddIcon></AddIcon>
+                <AddIcon onClick={(e)=>handleClick({target:{id:'add-window'}})}></AddIcon>
               </Button>
             </div>
 
@@ -74,7 +74,8 @@ class WindowPanel extends Component {
         {/*rooms.find(r=>r.name===selectedRoom).name*/}
         <Tabs
             value={selectedWindow}
-            onChange={handleChange}
+            onChange={(e,v)=>handleChange({target:{id:'selectedWindow'}},v)}
+
             indicatorColor="primary"
             textColor="primary"
             variant="scrollable"
@@ -82,14 +83,14 @@ class WindowPanel extends Component {
 
           >
             {windows.map(r=>(
-              <Tab key={r.id} name="selectedWindow" label={r.name} />))
+              <Tab key={r.id} onClick={e=>console.log(e.target)} label={r.name} />))
             }
           </Tabs>
           <div className={classes.container}>
               <div className={classes.row}>
                  <TextField
                    className={classNames(classes.textField, classes.nameField)}
-                   name="window-name"
+                   id="window-name"
                    label="Name"
                    value={windows[selectedWindow].name}
                    onChange={handleChange}
@@ -97,7 +98,7 @@ class WindowPanel extends Component {
 
              </div>
              <TextField
-               name="window-description"
+               id="window-description"
                className={classNames(classes.textField, classes.descriptionField)}
                label="Description"
                value={windows[selectedWindow].description}

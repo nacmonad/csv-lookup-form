@@ -41,13 +41,13 @@ export default withStyles(styles)((props)=>{
     <div>
       <div className={classes.row}>
         <Typography variant="subtitle1">Valence Options</Typography>
-        <Button name="toggle-valance" className={classes.button} variant="fab" onClick={handleChange}>
+        <Button id="toggle-valance" className={classes.button} variant="fab" onClick={handleChange}>
           {window.showValance ? <RemoveIcon></RemoveIcon>:<AddIcon></AddIcon>}</Button>
       </div>
       {window.showValance &&
         <OutlinedDropdown
           title="Valance"
-          name="valance-option"
+          id="valance-option"
           helperText="Please select valance option"
           items={form.valanceOptions}
           selectedItem={window.selectedValanceOption !== "" ? window.selectedValanceOption : form.valanceOptions[0]}

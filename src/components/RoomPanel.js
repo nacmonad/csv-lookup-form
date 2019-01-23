@@ -64,7 +64,7 @@ class RoomPanel extends Component {
             <div style={{ maxWidth:'12rem', textAlign:'center'}}>
               <Typography variant="subtitle2">Add a room</Typography>
               <Button className={classes.fab} onClick={handleClick} id="add-room" size="small" variant="fab">
-                <AddIcon></AddIcon>
+                <AddIcon onClick={(e)=>handleClick({target:{id:'add-room'}})}></AddIcon>
               </Button>
             </div>
 
@@ -72,7 +72,8 @@ class RoomPanel extends Component {
         {/*rooms.find(r=>r.name===selectedRoom).name*/}
         <Tabs
             value={selectedRoom}
-            onChange={handleChange}
+            onChange={(e,v)=>handleChange({target:{id:'selectedRoom'}},v)}
+
             indicatorColor="primary"
             textColor="primary"
             variant="scrollable"
@@ -80,14 +81,14 @@ class RoomPanel extends Component {
             centered={false}
           >
             {rooms.map(r=>(
-              <Tab key={r.id} name="selectedRoom" label={r.name} />))
+              <Tab key={r.id} id="selectedRoom" label={r.name} />))
             }
           </Tabs>
            <div className={classes.container}>
                <div className={classes.row}>
                   <TextField
                     className={classNames(classes.textField, classes.nameField)}
-                    name="room-name"
+                    id="room-name"
                     label="Name"
                     value={rooms[selectedRoom].name}
                     onChange={handleChange}
@@ -95,7 +96,7 @@ class RoomPanel extends Component {
 
               </div>
               <TextField
-                name="room-description"
+                id="room-description"
                 className={classNames(classes.textField, classes.descriptionField)}
                 label="Description"
                 value={rooms[selectedRoom].description}
