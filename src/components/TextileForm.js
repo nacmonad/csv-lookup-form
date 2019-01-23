@@ -56,7 +56,20 @@ class TextileForm extends Component {
     console.log(e.target.value)
     console.log(v)
     let formCopy = {...this.props.form}
+    //let thisWindow = formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow];
     switch(e.target.name) {
+      case "project-name":
+        formCopy.projectName = e.target.value
+        this.props.setForm(formCopy)
+        break;
+      case "window-name":
+        formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].name = e.target.value;
+        this.props.setForm(formCopy)
+        break;
+      case "window-description":
+        formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].description = e.target.value;
+        this.props.setForm(formCopy)
+        break;
       case "room-name":
         formCopy.rooms[formCopy.selectedRoom].name = e.target.value;
         this.props.setForm(formCopy)
@@ -75,33 +88,33 @@ class TextileForm extends Component {
         this.props.setForm(formCopy)
         break;
       case "worksheet":
-        formCopy.selectedWorksheet = e.target.value
-        formCopy.selectedValance = `${e.target.value.charAt(0).toUpperCase()} Valance`
+        formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedWorksheet = e.target.value
+        formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedValance = `${e.target.value.charAt(0).toUpperCase()} Valance`
         this.props.setForm(formCopy)
         break;
       case "fabric":
-        formCopy.selectedFabric = e.target.value;
-        formCopy.selectedPriceGroup = formCopy.fabricToPriceGroupMapping[e.target.value];
+        formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedFabric = e.target.value;
+        formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedPriceGroup = formCopy.fabricToPriceGroupMapping[e.target.value];
         this.props.setForm(formCopy)
         break;
       case "pricegroup":
-        formCopy.selectedPriceGroup = e.target.value;
+        formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedPriceGroup = e.target.value;
         this.props.setForm(formCopy)
         break;
       case "toggle-valance":
-        this.props.setForm({ ...formCopy, showValance:!formCopy.showValance })
+        this.props.setForm({ ...formCopy, showValance:!formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].showValance })
         break;
       case "valance":
-        formCopy.selectedValanceOption = e.target.value;
+        formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedValanceOption = e.target.value;
         this.props.setForm(formCopy)
         break;
       case "units":
-        formCopy.dimensions[e.target.name] = e.target.value;
+        formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].dimensions[e.target.name] = e.target.value;
         this.props.setForm(formCopy)
         break;
       case "width":
       case "height":
-        formCopy.dimensions[e.target.name] = parseInt(e.target.value);
+        formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].dimensions[e.target.name] = parseInt(e.target.value);
         this.props.setForm(formCopy)
         break;
       default:
@@ -124,9 +137,16 @@ class TextileForm extends Component {
             name:`Window ${formCopy.rooms[formCopy.selectedRoom].windows.length}`,
             description: ``,
             dimensions: {
-              width:30,
-              height:30
+              units: 'inches',
+              height: 30,
+              width: 30
             },
+            selectedValence:'R Valance',
+            selectedWorksheet:'Roller',
+            selectedFabric:'Cottonwood',
+            selectedPriceGroup:'PG1',
+            showValance:false,
+            total:155.95,
           },]
         })
         this.props.setForm(formCopy)
@@ -138,9 +158,16 @@ class TextileForm extends Component {
           name:`Window ${formCopy.rooms[formCopy.selectedRoom].windows.length+1}`,
           description: ``,
           dimensions: {
+            units: 'inches',
             width:30,
             height:30
-          }
+          },
+          selectedValence:'R Valance',
+          selectedWorksheet:'Roller',
+          selectedFabric:'Cottonwood',
+          selectedPriceGroup:'PG1',
+          showValance:false,
+          total:155.95
         })
         this.props.setForm(formCopy)
 
@@ -234,29 +261,52 @@ class TextileForm extends Component {
     let activeTable = []
     let valanceTable = []
     console.log(workbook)
-    if(typeof workbook.Sheets[form.selectedWorksheet] !== 'undefined' && form.priceGroups.findIndex(pg=>form.selectedPriceGroup) > -1) {
-      const index = form.priceGroups.findIndex(pg=>pg===form.selectedPriceGroup);
+
+    if(typeof workbook.Sheets[form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedWorksheet] !== 'undefined' && form.priceGroups.findIndex(pg=>form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedPriceGroup) > -1) {
+      const index = form.priceGroups.findIndex(pg=>pg===form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedPriceGroup);
       const rangeString = form.priceGroupMap[index]
 
-      activeTable = parseTableFromRange(rangeString, workbook.Sheets[form.selectedWorksheet])
+      activeTable = parseTableFromRange(rangeString, workbook.Sheets[form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedWorksheet])
 
-      if(form.showValance) {
+      if(form.rooms[form.selectedRoom].windows[form.selectedWindow].showValance) {
         console.log("fetching valance table...")
-        const vindex = form.valances.findIndex(v=>v===form.selectedValance)
+        console.log(form.rooms[form.selectedRoom].windows[form.selectedWindow])
+        const vindex = form.valances.findIndex(v=>v===form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedValance)
         const valanceRangeString = form.valanceMap[vindex]
-        valanceTable = parseTableFromRange(valanceRangeString, workbook.Sheets[form.selectedValance]);
+        valanceTable = parseTableFromRange(valanceRangeString, workbook.Sheets[form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedValance]);
       }
 
     }
 
     //var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
     //   var json_object = JSON.stringify(XL_row_object);
-    const total = this._calculateTotal(form.dimensions, activeTable, valanceTable);
-    console.log("rooms:")
+
+
+    const windowTotal = this._calculateTotal(form.rooms[form.selectedRoom].windows[form.selectedWindow].dimensions, activeTable, valanceTable);
+    form.rooms[form.selectedRoom].windows[form.selectedWindow].total = parseFloat(windowTotal);
+    console.log("rooms")
     console.log(form.rooms)
+    let windows = []
+    let grandTotal = -1;
+    if(form.rooms.length > 1) {
+      windows = form.rooms.reduce((r1,r2)=>{
+        return [...r1.windows, ...r2.windows];
+      });
+    } else {
+      windows = form.rooms[0].windows;
+      //grandTotal = windowTotal
+    }
+    console.log("the windows!")
+    console.log(windows)
+    console.log("GT:")
+    grandTotal = windows.reduce((sum,w)=>sum+w.total, 0)
+
+    console.log(grandTotal)
     return (
         <div className={classes.root}>
           <Typography className={classes.typography} variant="title">Interactive Pricing Form</Typography>
+          <Typography className={classes.typography} variant="subtitle1">Project Id.: {form.projectId}</Typography>
+          <TextField name="project-name" label="Project Name" value={form.projectName} onChange={this._handleChange.bind(this)}/>
           <div className={classes.column}>
             <RoomPanel handleClick={this._handleClick.bind(this)} handleChange={this._handleChange.bind(this)} rooms={form.rooms} selectedRoom={form.selectedRoom}/>
             <WindowPanel handleClick={this._handleClick.bind(this)} handleChange={this._handleChange.bind(this)} windows={form.rooms[form.selectedRoom].windows} selectedWindow={form.selectedWindow}/>
@@ -267,18 +317,19 @@ class TextileForm extends Component {
             <Typography className={classes.typography} variant="subtitle1">Dimensions and Type</Typography>
 
             <WidthHeightTextInput
-              maxWidth={activeTable[0] ? ( form.dimensions.units==='inches' ? activeTable[0][activeTable[0].length-1] : activeTable[0][activeTable[0].length-1]/CM_TO_INCH) : 0}
-              maxHeight={activeTable[0] ? ( form.dimensions.units==='inches' ? activeTable[activeTable.length-1][0] : activeTable[activeTable.length-1][0]/CM_TO_INCH) : 0}
-              dimensions={form.dimensions}
+              maxWidth={activeTable[0] ? ( form.rooms[form.selectedRoom].windows[form.selectedWindow].dimensions.units==='inches' ? activeTable[0][activeTable[0].length-1] : activeTable[0][activeTable[0].length-1]/CM_TO_INCH) : 0}
+              maxHeight={activeTable[0] ? ( form.rooms[form.selectedRoom].windows[form.selectedWindow].dimensions.units==='inches' ? activeTable[activeTable.length-1][0] : activeTable[activeTable.length-1][0]/CM_TO_INCH) : 0}
+              dimensions={form.rooms[form.selectedRoom].windows[form.selectedWindow].dimensions}
               handleChange={this._handleChange.bind(this)}
               />
             <OutlinedDropdown
               title="Units"
               helperText="Please select measurement unit"
               items={["inches", "centimetres"]}
-              selectedItem={form.dimensions.units}
+              selectedItem={form.rooms[form.selectedRoom].windows[form.selectedWindow].dimensions.units}
               handleSelect={this._handleChange.bind(this)}/>
           </div>
+
           {/*Work Sheets Select*/
 
             (<div className={classes.row}>
@@ -286,22 +337,22 @@ class TextileForm extends Component {
                   title="Worksheet"
                   helperText="Select a Worksheet"
                   items={workbook.SheetNames.filter(((a,i)=>i%2===0))}
-                  selectedItem={this.props.form.selectedWorksheet}
+                  selectedItem={form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedWorksheet}
                   handleSelect={this._handleChange.bind(this)}/>
                 <OutlinedDropdown
                   title="Fabric"
                   helperText="Select a Fabric"
                   items={/*this.props.form.selectedWorksheet === 'Interlude' ? this.props.form.priceGroups.slice(0,4) : this.props.form.priceGroups*/
-                    Object.keys(this.props.form.fabricToPriceGroupMapping)
+                    Object.keys(form.fabricToPriceGroupMapping)
                   }
-                  selectedItem={this.props.form.selectedFabric}
+                  selectedItem={form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedFabric}
                   handleSelect={this._handleChange.bind(this)}/>
                 <OutlinedDropdown
                   title="PriceGroup"
                   helperText="Select a Price Group"
                   hidden={true}
-                  items={this.props.form.selectedWorksheet === 'Interlude' ? this.props.form.priceGroups.slice(0,4) : this.props.form.priceGroups}
-                  selectedItem={this.props.form.selectedPriceGroup}
+                  items={form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedWorksheet === 'Interlude' ? form.priceGroups.slice(0,4) : form.priceGroups}
+                  selectedItem={form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedPriceGroup}
                   handleSelect={this._handleChange.bind(this)}/>
               </div>)
           }
@@ -309,7 +360,12 @@ class TextileForm extends Component {
           <AddValanceOption form={form} workbook={workbook} handleChange={this._handleChange.bind(this)}/>
 
           <div>
-            <Typography variant="display1"><b>Total:</b> {total} </Typography>
+            <Typography variant="display2"><b>Current Window Total:</b> {windowTotal} </Typography>
+          </div>
+          <div>
+            <Typography variant="display1"><b>Total:</b> {
+              grandTotal.toString()
+          } </Typography>
           </div>
         </div>
       )

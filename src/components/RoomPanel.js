@@ -19,7 +19,7 @@ import { withStyles } from '@material-ui/core/styles';
 const styles = theme => ({
   root:{
     margin:'0.5rem 0 0.5rem 0',
-    maxWidth:'32rem'
+    maxWidth:'48rem'
 
   },
   container:{
@@ -58,10 +58,10 @@ class RoomPanel extends Component {
     const {classes, handleClick, handleChange, rooms, selectedRoom} = this.props;
     return (
       <div className={classes.root} >
-        <div className={classes.row}>
+        <div className={classNames(classes.row, classes.descriptionField)}>
           <Typography className={classes.typography} variant="subtitle1">Rooms</Typography>
 
-            <div style={{maxWidth:'12rem', textAlign:'center'}}>
+            <div style={{ maxWidth:'12rem', textAlign:'center'}}>
               <Typography variant="subtitle2">Add a room</Typography>
               <Button className={classes.fab} onClick={handleClick} id="add-room" size="small" variant="fab">
                 <AddIcon></AddIcon>
@@ -77,7 +77,7 @@ class RoomPanel extends Component {
             textColor="primary"
             variant="scrollable"
             scrollButtons="auto"
-
+            centered={false}
           >
             {rooms.map(r=>(
               <Tab key={r.id} name="selectedRoom" label={r.name} />))

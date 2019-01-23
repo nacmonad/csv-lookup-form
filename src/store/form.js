@@ -1,7 +1,9 @@
 import shortid from 'shortid';
 
+const id = shortid.generate();
 const initialState = {
-    projectId: '',
+    projectId: id,
+    projectName: `project-${id}`,
     dimensions: {
       units: 'inches',
       height: 30,
@@ -90,31 +92,16 @@ const initialState = {
           id:shortid.generate(),
           name: 'Window 1',
           dimensions: {
-            width: 30,
-            height: 30
-          }
-        }
-      ]
-    },{
-      id:shortid.generate(),
-      name:'Room 2',
-      description:'',
-      windows:[
-        {
-          id:shortid.generate(),
-          name: 'Window 1',
-          dimensions: {
-            width: 30,
-            height: 30
-          }
-        },
-        {
-          id:shortid.generate(),
-          name: 'Window 2',
-          dimensions: {
-            width: 30,
-            height: 30
-          }
+            units: 'inches',
+            height: 30,
+            width: 30
+          },
+          selectedValance:'R Valance',
+          selectedWorksheet:'Roller',
+          selectedFabric:'Cottonwood',
+          selectedPriceGroup:'PG1',
+          showValance:'false',
+          total:155.95
         }
       ]
     }],

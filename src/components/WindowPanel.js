@@ -85,12 +85,25 @@ class WindowPanel extends Component {
               <Tab key={r.id} name="selectedWindow" label={r.name} />))
             }
           </Tabs>
-           <div>
-              {windows[selectedWindow].name } <br/>
-              {windows[selectedWindow].description }
+          <div className={classes.container}>
+              <div className={classes.row}>
+                 <TextField
+                   className={classNames(classes.textField, classes.nameField)}
+                   name="window-name"
+                   label="Name"
+                   value={windows[selectedWindow].name}
+                   onChange={handleChange}
+                   />
 
-
-           </div>
+             </div>
+             <TextField
+               name="window-description"
+               className={classNames(classes.textField, classes.descriptionField)}
+               label="Description"
+               value={windows[selectedWindow].description}
+               onChange={handleChange}
+               />
+          </div>
       </div>
     )
   }
