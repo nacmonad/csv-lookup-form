@@ -25,7 +25,7 @@ const styles = theme => ({
   container:{
     display:'flex',
     flexDirection:'column',
-    margin: '0.5rem 1rem 0.5rem 1rem'
+    margin: '0.5rem 0rem 0.5rem 0rem'
   },
   nameField:{
     maxWidth:'8rem'

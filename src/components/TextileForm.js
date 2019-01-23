@@ -27,7 +27,7 @@ const CM_TO_INCH=0.393701;
 
 const styles = {
   root:{
-
+    padding:'1rem'
   },
   column:{
     display:'flex',
@@ -327,7 +327,7 @@ class TextileForm extends Component {
             <RoomPanel handleClick={this._handleClick.bind(this)} handleChange={this._handleChange.bind(this)} rooms={form.rooms} selectedRoom={form.selectedRoom}/>
             <WindowPanel handleClick={this._handleClick.bind(this)} handleChange={this._handleChange.bind(this)} windows={form.rooms[form.selectedRoom].windows} selectedWindow={form.selectedWindow}/>
 
-        </div>
+          </div>
 
           <div className={classes.column}>
             <Typography className={classes.typography} variant="subtitle1">Dimensions and Type</Typography>
