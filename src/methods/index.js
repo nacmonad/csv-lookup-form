@@ -1,4 +1,4 @@
-import XLSX from 'xlsx-style';
+import XLSX from 'xlsx';
 
 export const parseTableFromRange = (rangeString, sheet) => {
      const range = XLSX.utils.decode_range(rangeString);

@@ -1,3 +1,5 @@
+import shortid from 'shortid';
+
 const initialState = {
     projectId: '',
     dimensions: {
@@ -79,8 +81,45 @@ const initialState = {
       "PG9":[],
       "PG10":[]
     },
-    rooms:[], // {id:, description: }
-    windows:[], // { room_id, dimensions }
+    rooms:[{
+      id:shortid.generate(),
+      name:'Room 1',
+      description:'',
+      windows:[
+        {
+          id:shortid.generate(),
+          name: 'Window 1',
+          dimensions: {
+            width: 30,
+            height: 30
+          }
+        }
+      ]
+    },{
+      id:shortid.generate(),
+      name:'Room 2',
+      description:'',
+      windows:[
+        {
+          id:shortid.generate(),
+          name: 'Window 1',
+          dimensions: {
+            width: 30,
+            height: 30
+          }
+        },
+        {
+          id:shortid.generate(),
+          name: 'Window 2',
+          dimensions: {
+            width: 30,
+            height: 30
+          }
+        }
+      ]
+    }],
+    selectedRoom: 0,
+    selectedWindow: 0,
     valances:["R Valance", "V Valance", "I Valance"],
     valanceMap:["A1:S13","A1:S7","A1:S4"],
     selectedValanceOption:"",

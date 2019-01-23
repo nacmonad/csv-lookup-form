@@ -8,13 +8,19 @@ import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 
+
+import RoomPanel from './RoomPanel';
+import WindowPanel from './WindowPanel';
 import OutlinedDropdown from './OutlinedDropdown';
+
+
 import WidthHeightTextInput from './WidthHeightTextInput';
 import AddValanceOption from './AddValanceOption'
 
+
 import {selectWorksheet, setForm} from '../actions/form';
 import {parseTableFromRange} from '../methods';
-
+import shortid from 'shortid';
 
 //UNIT CONVERSION
 const CM_TO_INCH=0.393701;
@@ -32,6 +38,9 @@ const styles = {
     display:'flex',
     flexDirection:'row',
     margin:'1rem 0'
+  },
+  typography:{
+    margin:'0.5rem 0 0.5rem 0'
   }
 }
 
@@ -40,11 +49,31 @@ class TextileForm extends Component {
     super();
     this._handleChange = this._handleChange.bind(this)
     this._calculateTotal = this._calculateTotal.bind(this)
+
   }
-  _handleChange(e) {
+  _handleChange(e, v) {
     console.log(e.target)
+    console.log(e.target.value)
+    console.log(v)
     let formCopy = {...this.props.form}
     switch(e.target.name) {
+      case "room-name":
+        formCopy.rooms[formCopy.selectedRoom].name = e.target.value;
+        this.props.setForm(formCopy)
+        break;
+      case "room-description":
+        formCopy.rooms[formCopy.selectedRoom].description = e.target.value;
+        this.props.setForm(formCopy)
+        break;
+      case "selectedRoom":
+        formCopy.selectedRoom = v;
+        formCopy.selectedWindow = 0; //must reset incase out of index of new windows array!
+        this.props.setForm(formCopy)
+        break;
+      case "selectedWindow":
+        formCopy.selectedWindow = v;
+        this.props.setForm(formCopy)
+        break;
       case "worksheet":
         formCopy.selectedWorksheet = e.target.value
         formCopy.selectedValance = `${e.target.value.charAt(0).toUpperCase()} Valance`
@@ -80,14 +109,48 @@ class TextileForm extends Component {
         console.log(e.target)
     }
   }
+  _handleClick(e){
+    console.log(e.target.id)
+    let formCopy = {...this.props.form}
 
+    switch(e.target.id) {
+      case "add-room":
+        formCopy.rooms.push({
+          id:shortid.generate(),
+          name:`Room ${formCopy.rooms.length+1}`,
+          description: ``,
+          windows:[{
+            id:shortid.generate(),
+            name:`Window ${formCopy.rooms[formCopy.selectedRoom].windows.length}`,
+            description: ``,
+            dimensions: {
+              width:30,
+              height:30
+            },
+          },]
+        })
+        this.props.setForm(formCopy)
+
+        break;
+      case "add-window":
+        formCopy.rooms[formCopy.selectedRoom].windows.push({
+          id:shortid.generate(),
+          name:`Window ${formCopy.rooms[formCopy.selectedRoom].windows.length+1}`,
+          description: ``,
+          dimensions: {
+            width:30,
+            height:30
+          }
+        })
+        this.props.setForm(formCopy)
+
+        break;
+      default:
+        console.log("unhandled " + e.target.id)
+    }
+  }
   _calculateTotal(dim, at, vt) {
     //this is bound to the scope!
-    console.log("calculatin omsethin")
-    console.log(dim)
-    console.log(at)
-    console.log(vt)
-
 
     let textileWidthInInches;
     let textileHeightInInches;
@@ -132,19 +195,19 @@ class TextileForm extends Component {
         //we know it will be in the same ColNumber, we just need to match the row
         const tableHeight = vt.length;  //rows
         const tableWidth = vt[0].length; //
-        console.log("Parsing header row of valance table")
-        console.log(vt)
+        //console.log("Parsing header row of valance table")
+        //console.log(vt)
         let tempOptions = []
 
         //TODO: dont do this!
         if(this.props.form.selectedValanceOption === '') this.props.form.selectedValanceOption = vt[1][0]
 
         for(var i =1; i< tableHeight; i++ ) {
-          console.log()
-          console.log(vt[i][0] + " compared to " + this.props.form.selectedValanceOption)
+          //console.log()
+          //console.log(vt[i][0] + " compared to " + this.props.form.selectedValanceOption)
           tempOptions.push(vt[i][0])
           if(vt[i][0] === this.props.form.selectedValanceOption){
-            console.log("found col match: " + i)
+            //console.log("found col match: " + i)
             findVRow = i;
           }
         }
@@ -154,13 +217,10 @@ class TextileForm extends Component {
 
         if(findVRow < 0) return -1
         //width is assumed, same findCol
-        console.log(at[findRow][findCol])
-        console.log(vt[findVRow][findCol])
+
         return (parseFloat(at[findRow][findCol])+parseFloat(vt[findVRow][findCol])).toFixed(2)
       } else {
-        console.log("finding...")
-        console.log(findRow)
-        console.log(findCol)
+
         return (parseFloat(at[findRow][findCol])).toFixed(2);
       }
 
@@ -192,19 +252,19 @@ class TextileForm extends Component {
     //var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
     //   var json_object = JSON.stringify(XL_row_object);
     const total = this._calculateTotal(form.dimensions, activeTable, valanceTable);
-    console.log("units")
-    console.log(form.dimensions.units)
+    console.log("rooms:")
+    console.log(form.rooms)
     return (
         <div className={classes.root}>
-          <Typography variant="title">Interactive Pricing Form</Typography>
+          <Typography className={classes.typography} variant="title">Interactive Pricing Form</Typography>
           <div className={classes.column}>
-            <Typography variant="subtitle1">Rooms</Typography>
+            <RoomPanel handleClick={this._handleClick.bind(this)} handleChange={this._handleChange.bind(this)} rooms={form.rooms} selectedRoom={form.selectedRoom}/>
+            <WindowPanel handleClick={this._handleClick.bind(this)} handleChange={this._handleChange.bind(this)} windows={form.rooms[form.selectedRoom].windows} selectedWindow={form.selectedWindow}/>
 
-            <Typography variant="subtitle1">Windows</Typography>
-          </div>
+        </div>
 
           <div className={classes.column}>
-            <Typography variant="subtitle1">Dimensions and Type</Typography>
+            <Typography className={classes.typography} variant="subtitle1">Dimensions and Type</Typography>
 
             <WidthHeightTextInput
               maxWidth={activeTable[0] ? ( form.dimensions.units==='inches' ? activeTable[0][activeTable[0].length-1] : activeTable[0][activeTable[0].length-1]/CM_TO_INCH) : 0}
