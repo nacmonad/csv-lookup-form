@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 
-
+import {MuiThemeProvider} from '@material-ui/core/styles/'
+import theme from './theme';
 import TextileForm from './components/TextileForm';
 
 import store from './store';
@@ -18,7 +19,9 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <TextileForm />
+        <MuiThemeProvider theme={theme}>
+          <TextileForm />
+        </MuiThemeProvider>
       </Provider>
     );
   }

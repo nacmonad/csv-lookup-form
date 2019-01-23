@@ -50,8 +50,13 @@ class TextileForm extends Component {
         formCopy.selectedValance = `${e.target.value.charAt(0).toUpperCase()} Valance`
         this.props.setForm(formCopy)
         break;
+      case "fabric":
+        formCopy.selectedFabric = e.target.value;
+        formCopy.selectedPriceGroup = formCopy.fabricToPriceGroupMapping[e.target.value];
+        this.props.setForm(formCopy)
+        break;
       case "pricegroup":
-        formCopy.selectedPriceGroup = e.target.value
+        formCopy.selectedPriceGroup = e.target.value;
         this.props.setForm(formCopy)
         break;
       case "toggle-valance":
@@ -192,9 +197,15 @@ class TextileForm extends Component {
     return (
         <div className={classes.root}>
           <Typography variant="title">Interactive Pricing Form</Typography>
+          <div className={classes.column}>
+            <Typography variant="subtitle1">Rooms</Typography>
 
+            <Typography variant="subtitle1">Windows</Typography>
+          </div>
 
           <div className={classes.column}>
+            <Typography variant="subtitle1">Dimensions and Type</Typography>
+
             <WidthHeightTextInput
               maxWidth={activeTable[0] ? ( form.dimensions.units==='inches' ? activeTable[0][activeTable[0].length-1] : activeTable[0][activeTable[0].length-1]/CM_TO_INCH) : 0}
               maxHeight={activeTable[0] ? ( form.dimensions.units==='inches' ? activeTable[activeTable.length-1][0] : activeTable[activeTable.length-1][0]/CM_TO_INCH) : 0}
@@ -209,20 +220,30 @@ class TextileForm extends Component {
               handleSelect={this._handleChange.bind(this)}/>
           </div>
           {/*Work Sheets Select*/
-            <div className={classes.row}>
-              <OutlinedDropdown
-                title="Worksheet"
-                helperText="Select a Worksheet"
-                items={workbook.SheetNames.filter(((a,i)=>i%2===0))}
-                selectedItem={this.props.form.selectedWorksheet}
-                handleSelect={this._handleChange.bind(this)}/>
-              <OutlinedDropdown
-                title="PriceGroup"
-                helperText="Select a Price Group"
-                items={this.props.form.selectedWorksheet === 'Interlude' ? this.props.form.priceGroups.slice(0,4) : this.props.form.priceGroups}
-                selectedItem={this.props.form.selectedPriceGroup}
-                handleSelect={this._handleChange.bind(this)}/>
-            </div>
+
+            (<div className={classes.row}>
+                <OutlinedDropdown
+                  title="Worksheet"
+                  helperText="Select a Worksheet"
+                  items={workbook.SheetNames.filter(((a,i)=>i%2===0))}
+                  selectedItem={this.props.form.selectedWorksheet}
+                  handleSelect={this._handleChange.bind(this)}/>
+                <OutlinedDropdown
+                  title="Fabric"
+                  helperText="Select a Fabric"
+                  items={/*this.props.form.selectedWorksheet === 'Interlude' ? this.props.form.priceGroups.slice(0,4) : this.props.form.priceGroups*/
+                    Object.keys(this.props.form.fabricToPriceGroupMapping)
+                  }
+                  selectedItem={this.props.form.selectedFabric}
+                  handleSelect={this._handleChange.bind(this)}/>
+                <OutlinedDropdown
+                  title="PriceGroup"
+                  helperText="Select a Price Group"
+                  hidden={true}
+                  items={this.props.form.selectedWorksheet === 'Interlude' ? this.props.form.priceGroups.slice(0,4) : this.props.form.priceGroups}
+                  selectedItem={this.props.form.selectedPriceGroup}
+                  handleSelect={this._handleChange.bind(this)}/>
+              </div>)
           }
 
           <AddValanceOption form={form} workbook={workbook} handleChange={this._handleChange.bind(this)}/>

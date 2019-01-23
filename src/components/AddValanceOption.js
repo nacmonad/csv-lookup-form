@@ -39,7 +39,7 @@ export default withStyles(styles)((props)=>{
   return (
     <div>
       <div className={classes.row}>
-        <Typography variant="title">Valence Options</Typography>
+        <Typography variant="subtitle1">Valence Options</Typography>
         <Button name="toggle-valance" className={classes.button} variant="fab" onClick={(e)=>{
           handleChange({
             target: {
