@@ -95,7 +95,7 @@ class RoomPanel extends Component {
                     onChange={handleChange}
                     />
                   <Button className={classes.fab} disabled={rooms.length < 2} onClick={handleClick} id="remove-room" size="small" variant="fab">
-                      <RemoveIcon onClick={handleClick}></RemoveIcon>
+                      <RemoveIcon onClick={(e)=>handleClick({target:{id:'remove-room'}})}></RemoveIcon>
                     </Button>
                   </div>
               </div>

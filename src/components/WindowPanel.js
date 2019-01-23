@@ -97,7 +97,7 @@ class WindowPanel extends Component {
                      onChange={handleChange}
                      />
                    <Button className={classes.fab} onClick={handleClick} disabled={windows.length <2} id="remove-window" size="small" variant="fab">
-                         <RemoveIcon onClick={handleClick}></RemoveIcon>
+                         <RemoveIcon onClick={(e)=>handleClick({target:{id:'remove-window'}})}></RemoveIcon>
                     </Button>
                  </div>
 
