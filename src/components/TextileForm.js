@@ -153,8 +153,7 @@ class TextileForm extends Component {
 
     switch(e.target.id) {
       case "download-form":
-        this._printForm(formCopy)
-        this.props.downloadFormRequested(formCopy);
+        this.props.downloadFormRequested(this._printForm(formCopy));
         break;
       case "remove-room":
         formCopy.rooms.splice(formCopy.selectedRoom,1);
@@ -338,9 +337,7 @@ class TextileForm extends Component {
         });
       }) });
 
-    console.log("got windows:")
-    console.log(preppedWindows)
-    console.log(prettyjson.render({
+    return prettyjson.render({
       projectId: form.projectId,
       clientName: form.clientName,
       windows:preppedWindows,
@@ -349,7 +346,7 @@ class TextileForm extends Component {
       keysColor: 'rainbow',
       dashColor: 'magenta',
       stringColor: 'white'
-    }));
+    })
 
   }
 
