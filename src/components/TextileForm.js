@@ -59,8 +59,8 @@ class TextileForm extends Component {
     //let thisWindow = formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow];
     switch(e.target.id) {
 
-      case "project-name":
-        formCopy.projectName = e.target.value
+      case "client-name":
+        formCopy.clientName = e.target.value
         this.props.setForm(formCopy)
         break;
       case "window-name":
@@ -115,12 +115,12 @@ class TextileForm extends Component {
         this.props.setForm(formCopy)
         break;
       case "units":
-        formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].dimensions[e.target.name] = e.target.value;
+        formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].dimensions[e.target.id] = e.target.value;
         this.props.setForm(formCopy)
         break;
       case "width":
       case "height":
-        formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].dimensions[e.target.name] = parseInt(e.target.value);
+        formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].dimensions[e.target.id] = parseInt(e.target.value);
         this.props.setForm(formCopy)
         break;
       default:
@@ -334,7 +334,8 @@ class TextileForm extends Component {
         <div className={classes.root}>
           <Typography className={classes.typography} variant="title">Interactive Pricing Form</Typography>
           <Typography className={classes.typography} variant="subtitle1">Project Id.: {form.projectId}</Typography>
-          <TextField id="project-name" label="Project Name" value={form.projectName} onChange={this._handleChange.bind(this)}/>
+          <TextField id="project-name" label="Client Name" value={form.clientName} onChange={this._handleChange.bind(this)}/>
+
           <div className={classes.column}>
             <RoomPanel handleClick={this._handleClick.bind(this)} handleChange={this._handleChange.bind(this)} rooms={form.rooms} selectedRoom={form.selectedRoom}/>
             <WindowPanel handleClick={this._handleClick.bind(this)} handleChange={this._handleChange.bind(this)} windows={form.rooms[form.selectedRoom].windows} selectedWindow={form.selectedWindow}/>
@@ -355,7 +356,7 @@ class TextileForm extends Component {
               helperText="Please select measurement unit"
               items={["inches", "centimetres"]}
               selectedItem={form.rooms[form.selectedRoom].windows[form.selectedWindow].dimensions.units}
-              handleSelect={this._handleChange.bind(this)}/>
+              handleChange={this._handleChange.bind(this)}/>
           </div>
 
           {/*Work Sheets Select*/

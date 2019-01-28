@@ -24,7 +24,7 @@ export default withStyles(styles)((props) => {
     return (
     <div className={classes.root}>
         <TextField
-          name="width"
+          id="width"
           type="number"
           className={classes.textField}
           variant="outlined"
@@ -36,7 +36,7 @@ export default withStyles(styles)((props) => {
              max:maxWidth
            }}/>
         <TextField
-          name="height"
+          id="height"
           type="number"
           className={classes.textField}
           variant="outlined"

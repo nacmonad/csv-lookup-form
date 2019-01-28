@@ -32,7 +32,7 @@ const styles = theme => ({
 class OutlinedDropdown extends Component {
 
   render(){
-    const {classes, handleSelect, selectedItem, hidden, items, title, helperText} = this.props;
+    const {classes, handleChange, selectedItem, hidden, items, title, helperText} = this.props;
 
     return (
       <div className={ hidden ? classes.hidden : classes.root}>
@@ -43,7 +43,7 @@ class OutlinedDropdown extends Component {
          name={title.toLowerCase()}
          className={classes.textField}
          value={selectedItem}
-         onChange={handleSelect}
+         onChange={(e)=>handleChange({target:{id:'units', value:e.target.value}})}
          SelectProps={{
            MenuProps: {
              className: classes.menu,

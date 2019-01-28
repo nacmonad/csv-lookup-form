@@ -3,7 +3,7 @@ import shortid from 'shortid';
 const id = shortid.generate();
 const initialState = {
     projectId: id,
-    projectName: `project-${id}`,
+    clientName: `client-${id}`,
     selectedWorksheet:'',
     worksheets:[],
     fabricToPriceGroupMapping: {
