@@ -5,6 +5,9 @@ import {bindActionCreators} from 'redux';
 
 import { withStyles } from '@material-ui/core/styles';
 
+import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
+import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 
@@ -18,14 +21,28 @@ import WidthHeightTextInput from './WidthHeightTextInput';
 import AddValanceOption from './AddValanceOption'
 
 
-import {selectWorksheet, setForm} from '../actions/form';
+import {downloadFormRequested, selectWorksheet, setForm} from '../actions/form';
 import {parseTableFromRange} from '../methods';
 import shortid from 'shortid';
+
+
+
+import prettyjson from 'prettyjson';
+//import officegen from 'officegen';
+
+
+async function prepareAndDownloadDocx(form) {
+  return `Hello wurld`
+}
+
 
 //UNIT CONVERSION
 const CM_TO_INCH=0.393701;
 
-const styles = {
+const styles = theme => ({
+  button: {
+    margin: theme.spacing.unit,
+  },
   root:{
     padding:'1rem'
   },
@@ -37,18 +54,20 @@ const styles = {
   row:{
     display:'flex',
     flexDirection:'row',
-    margin:'1rem 0'
+    margin:'1rem 0',
+    alignItems:'center'
   },
   typography:{
     margin:'0.5rem 0 0.5rem 0'
   }
-}
+})
 
 class TextileForm extends Component {
   constructor(){
     super();
     this._handleChange = this._handleChange.bind(this)
     this._calculateTotal = this._calculateTotal.bind(this)
+    this._calculateGrandTotal = this._calculateGrandTotal.bind(this)
 
   }
   _handleChange(e, v) {
@@ -133,6 +152,10 @@ class TextileForm extends Component {
     let formCopy = {...this.props.form}
 
     switch(e.target.id) {
+      case "download-form":
+        this._printForm(formCopy)
+        this.props.downloadFormRequested(formCopy);
+        break;
       case "remove-room":
         formCopy.rooms.splice(formCopy.selectedRoom,1);
         formCopy.selectedRoom = 0;
@@ -280,6 +303,55 @@ class TextileForm extends Component {
     }
     return -1;
   }
+  _calculateGrandTotal(){
+    console.log("rooms")
+    console.log(this.props.form.rooms)
+    let windows = []
+    let grandTotal = -1;
+    if(this.props.form.rooms.length > 1) {
+      windows = this.props.form.rooms.reduce((w,r2)=>{
+        return [...w, ...r2.windows];
+      }, []);
+    } else {
+      windows = this.props.form.rooms[0].windows;
+      //grandTotal = windowTotal
+    }
+    console.log("the windows!")
+    console.log(windows)
+    console.log("GT:")
+    grandTotal = windows.reduce((sum,w)=>sum+w.total, 0)
+    console.log(grandTotal)
+    return  grandTotal;
+  }
+
+  _printForm(form) {
+    var text = ``;
+    var copy = {...form}
+    var preppedWindows = [];
+
+    copy.rooms.forEach((r,i)=>{
+      r.windows.forEach(w=> {
+        delete w.id;
+        preppedWindows.push({
+          ...w,
+          name:`${r.name}-${w.name}`,
+        });
+      }) });
+
+    console.log("got windows:")
+    console.log(preppedWindows)
+    console.log(prettyjson.render({
+      projectId: form.projectId,
+      clientName: form.clientName,
+      windows:preppedWindows,
+      grandTotal: this._calculateGrandTotal(),
+    }, {
+      keysColor: 'rainbow',
+      dashColor: 'magenta',
+      stringColor: 'white'
+    }));
+
+  }
 
   render () {
     const {classes, form, workbook} = this.props
@@ -312,24 +384,8 @@ class TextileForm extends Component {
     const windowTotal = this._calculateTotal(form.rooms[form.selectedRoom].windows[form.selectedWindow].dimensions, activeTable, valanceTable);
     form.rooms[form.selectedRoom].windows[form.selectedWindow].total = parseFloat(windowTotal);  //hardset formstate
 
-    console.log("rooms")
-    console.log(form.rooms)
-    let windows = []
-    let grandTotal = -1;
-    if(form.rooms.length > 1) {
-      windows = form.rooms.reduce((w,r2)=>{
-        return [...w, ...r2.windows];
-      }, []);
-    } else {
-      windows = form.rooms[0].windows;
-      //grandTotal = windowTotal
-    }
-    console.log("the windows!")
-    console.log(windows)
-    console.log("GT:")
-    grandTotal = windows.reduce((sum,w)=>sum+w.total, 0)
+    const grandTotal = this._calculateGrandTotal();
 
-    console.log(grandTotal)
     return (
         <div className={classes.root}>
           <Typography className={classes.typography} variant="title">Interactive Pricing Form</Typography>
@@ -367,7 +423,7 @@ class TextileForm extends Component {
                   helperText="Select a Worksheet"
                   items={workbook.SheetNames.filter(((a,i)=>i%2===0))}
                   selectedItem={form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedWorksheet}
-                  handleSelect={this._handleChange.bind(this)}/>
+                  handleChange={this._handleChange.bind(this)}/>
                 <OutlinedDropdown
                   title="Fabric"
                   helperText="Select a Fabric"
@@ -375,14 +431,14 @@ class TextileForm extends Component {
                     Object.keys(form.fabricToPriceGroupMapping)
                   }
                   selectedItem={form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedFabric}
-                  handleSelect={this._handleChange.bind(this)}/>
+                  handleChange={this._handleChange.bind(this)}/>
                 <OutlinedDropdown
                   title="PriceGroup"
                   helperText="Select a Price Group"
                   hidden={true}
                   items={form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedWorksheet === 'Interlude' ? form.priceGroups.slice(0,4) : form.priceGroups}
                   selectedItem={form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedPriceGroup}
-                  handleSelect={this._handleChange.bind(this)}/>
+                  handleChange={this._handleChange.bind(this)}/>
               </div>)
           }
 
@@ -394,10 +450,13 @@ class TextileForm extends Component {
           <div>
             <Typography variant="display1"><b>Current Window Total:</b> {windowTotal} </Typography>
           </div>
-          <div>
+          <div className={classes.row}>
             <Typography variant="display2"><b>Total:</b> {
-              grandTotal.toString()
+              grandTotal.toFixed(2).toString()
           } </Typography>
+          <IconButton id="download-form" onClick={this._handleClick.bind(this)} color="primary" className={classes.button} aria-label="Add to shopping cart" size="large">
+            <CloudDownloadIcon onClick={(e)=> this._handleClick({target:{id:'download-form', value:e.target.value}})} />
+          </IconButton>
           </div>
         </div>
       )
@@ -414,7 +473,8 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return bindActionCreators({
     selectWorksheet,
-    setForm
+    setForm,
+    downloadFormRequested
   }, dispatch);
 }
 
