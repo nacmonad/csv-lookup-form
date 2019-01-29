@@ -331,6 +331,11 @@ class TextileForm extends Component {
     copy.rooms.forEach((r,i)=>{
       r.windows.forEach(w=> {
         delete w.id;
+        if(showValance) w.ValanceOption = w.selectedValanceOption;
+        delete w.selectedValanceOption;
+        w.Fabric = w.selectedFabric;
+        w.PriceGroup = w.selectedPriceGroup;
+        delete w.selectedFabric;
         preppedWindows.push({
           ...w,
           name:`${r.name}-${w.name}`,
