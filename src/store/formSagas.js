@@ -1,12 +1,20 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
 import { Document, Paragraph, Packer } from 'docx';
 
+import prettyjson from 'prettyjson';
 import download from 'downloadjs';
 
 const delay = (ms) => new Promise(res => setTimeout(res, ms));
 
-async function createAndDownloadFile(fileText) {
+async function createAndDownloadFile(parsedFormObj) {
   try {
+
+    const fileText = prettyjson.render(parsedFormObj, {
+      keysColor: 'rainbow',
+      dashColor: 'magenta',
+      stringColor: 'white'
+    });
+
     const doc = new Document();
     const paragraph = new Paragraph(fileText);
     doc.addParagraph(paragraph);
@@ -14,7 +22,7 @@ async function createAndDownloadFile(fileText) {
     const packer = new Packer();
     const b64string = await packer.toBase64String(doc)
 
-    return await download(fileText, "yourdoc.docx", "text/plain");
+    return await download(fileText, `${parsedFormObj.clientName}.docx`, "text/plain");
   } catch (e) {
     console.log(e)
     throw e

@@ -37,13 +37,13 @@ class OutlinedDropdown extends Component {
     return (
       <div className={ hidden ? classes.hidden : classes.root}>
         <TextField
-         id="outlined-select-unit"
+         id={title.toLowerCase()}
          select
          label={title}
          name={title.toLowerCase()}
          className={classes.textField}
          value={selectedItem}
-         onChange={(e)=>handleChange({target:{id:'units', value:e.target.value}})}
+         onChange={(e)=>handleChange({target:{id:title.toLowerCase(), value:e.target.value}})}
          SelectProps={{
            MenuProps: {
              className: classes.menu,

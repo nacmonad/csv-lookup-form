@@ -27,13 +27,7 @@ import shortid from 'shortid';
 
 
 
-import prettyjson from 'prettyjson';
 //import officegen from 'officegen';
-
-
-async function prepareAndDownloadDocx(form) {
-  return `Hello wurld`
-}
 
 
 //UNIT CONVERSION
@@ -330,11 +324,17 @@ class TextileForm extends Component {
 
     copy.rooms.forEach((r,i)=>{
       r.windows.forEach(w=> {
-        delete w.id;
-        if(showValance) w.ValanceOption = w.selectedValanceOption;
-        delete w.selectedValanceOption;
+
+        if(w.showValance) {
+          w.ValanceOption = w.selectedValanceOption;
+        }
+
         w.Fabric = w.selectedFabric;
         w.PriceGroup = w.selectedPriceGroup;
+
+        delete w.id;
+        delete w.showValance;
+        delete w.selectedValanceOption;
         delete w.selectedFabric;
         preppedWindows.push({
           ...w,
@@ -342,17 +342,12 @@ class TextileForm extends Component {
         });
       }) });
 
-    return prettyjson.render({
+    return {
       projectId: form.projectId,
       clientName: form.clientName,
       windows:preppedWindows,
       grandTotal: this._calculateGrandTotal(),
-    }, {
-      keysColor: 'rainbow',
-      dashColor: 'magenta',
-      stringColor: 'white'
-    })
-
+    }
   }
 
   render () {
