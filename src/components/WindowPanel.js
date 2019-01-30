@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import classNames from 'classnames';
 
 import Button from '@material-ui/core/Button';
-//import Fab from '@material-ui/core/Fab';
+import Fab from '@material-ui/core/Fab';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -64,9 +64,9 @@ class WindowPanel extends Component {
 
             <div style={{maxWidth:'12rem', textAlign:'center'}}>
               <Typography variant="subtitle2">Add a window</Typography>
-              <Button className={classes.fab} onClick={handleClick} id="add-window" size="small" variant="fab">
+              <Fab className={classes.fab} onClick={handleClick} id="add-window" size="small">
                 <AddIcon onClick={(e)=>handleClick({target:{id:'add-window'}})}></AddIcon>
-              </Button>
+              </Fab>
             </div>
 
           </div>
@@ -96,9 +96,10 @@ class WindowPanel extends Component {
                      value={windows[selectedWindow].name}
                      onChange={handleChange}
                      />
-                   <Button className={classes.fab} onClick={handleClick} disabled={windows.length <2} id="remove-window" size="small" variant="fab">
-                         <RemoveIcon onClick={(e)=>handleClick({target:{id:'remove-window'}})}></RemoveIcon>
-                    </Button>
+
+                   <Fab className={classes.fab} onClick={handleClick} disabled={windows.length < 2} id="remove-window" size="small">
+                    <RemoveIcon onClick={(e)=>handleClick({target:{id:'remove-window'}})}></RemoveIcon>
+                   </Fab>
                  </div>
 
              </div>

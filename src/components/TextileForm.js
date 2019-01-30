@@ -5,6 +5,8 @@ import {bindActionCreators} from 'redux';
 
 import { withStyles } from '@material-ui/core/styles';
 
+import Checkbox from '@material-ui/core/Checkbox';
+import InputLabel from '@material-ui/core/InputLabel';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
@@ -49,7 +51,7 @@ const styles = theme => ({
     display:'flex',
     flexDirection:'row',
     margin:'1rem 0',
-    alignItems:'center'
+    //alignItems:'center'
   },
   typography:{
     margin:'0.5rem 0 0.5rem 0'
@@ -71,7 +73,14 @@ class TextileForm extends Component {
     let formCopy = {...this.props.form}
     //let thisWindow = formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow];
     switch(e.target.id) {
-
+      case "show-motorization":
+        formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].showMotorization = !formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].showMotorization;
+        this.props.setForm(formCopy)
+        break;
+      case "selected-motorization":
+        formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedMotorization = e.target.value;
+        this.props.setForm(formCopy)
+        break;
       case "client-name":
         formCopy.clientName = e.target.value
         this.props.setForm(formCopy)
@@ -101,8 +110,12 @@ class TextileForm extends Component {
         formCopy.selectedWindow = v;
         this.props.setForm(formCopy)
         break;
-      case "worksheet":
-        formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedWorksheet = e.target.value
+      case "selectedhem":
+        formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedHem = e.target.value
+        this.props.setForm(formCopy)
+        break;
+      case "blindtype":
+        formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedBlindType = e.target.value
         formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedValanceOption = `${e.target.value.charAt(0).toUpperCase()} Valance`
         this.props.setForm(formCopy)
         break;
@@ -177,7 +190,7 @@ class TextileForm extends Component {
               width: 30
             },
             selectedValanceOption:'Decora 8',
-            selectedWorksheet:'Roller',
+            selectedBlindType:'Roller',
             selectedFabric:'Cottonwood',
             selectedPriceGroup:'PG1',
             showValance:false,
@@ -198,7 +211,7 @@ class TextileForm extends Component {
             height:30
           },
           selectedValanceOption:'Decora 8',
-          selectedWorksheet:'Roller',
+          selectedBlindType:'Roller',
           selectedFabric:'Cottonwood',
           selectedPriceGroup:'PG1',
           showValance:false,
@@ -328,12 +341,16 @@ class TextileForm extends Component {
         if(w.showValance) {
           w.ValanceOption = w.selectedValanceOption;
         }
-
+        if(w.showMotorization) {
+          w.MotorizationOption = w.selectedMotorization;
+        }
         w.Fabric = w.selectedFabric;
         w.PriceGroup = w.selectedPriceGroup;
 
         delete w.id;
         delete w.showValance;
+        delete w.showMotorization;
+        delete w.selectedMotorization;
         delete w.selectedValanceOption;
         delete w.selectedFabric;
         preppedWindows.push({
@@ -357,11 +374,11 @@ class TextileForm extends Component {
     console.log("workbook:")
     console.log(workbook)
 
-    if(typeof workbook.Sheets[form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedWorksheet] !== 'undefined' && form.priceGroups.findIndex(pg=>form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedPriceGroup) > -1) {
+    if(typeof workbook.Sheets[form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedBlindType] !== 'undefined' && form.priceGroups.findIndex(pg=>form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedPriceGroup) > -1) {
       const index = form.priceGroups.findIndex(pg=>pg===form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedPriceGroup);
       const rangeString = form.priceGroupMap[index]
 
-      activeTable = parseTableFromRange(rangeString, workbook.Sheets[form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedWorksheet])
+      activeTable = parseTableFromRange(rangeString, workbook.Sheets[form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedBlindType])
 
       if(form.rooms[form.selectedRoom].windows[form.selectedWindow].showValance) {
         console.log("fetching valance table...")
@@ -394,9 +411,11 @@ class TextileForm extends Component {
             <WindowPanel handleClick={this._handleClick.bind(this)} handleChange={this._handleChange.bind(this)} windows={form.rooms[form.selectedRoom].windows} selectedWindow={form.selectedWindow}/>
 
           </div>
-
+          <div>
+            <Typography variant="display1">Window Properties</Typography>
+          </div>
           <div className={classes.column}>
-            <Typography className={classes.typography} variant="subtitle1">Dimensions and Type</Typography>
+            <Typography className={classes.typography} variant="subtitle1">Dimensions and Units</Typography>
 
             <WidthHeightTextInput
               maxWidth={activeTable[0] ? ( form.rooms[form.selectedRoom].windows[form.selectedWindow].dimensions.units==='inches' ? activeTable[0][activeTable[0].length-1] : activeTable[0][activeTable[0].length-1]/CM_TO_INCH) : 0}
@@ -410,21 +429,24 @@ class TextileForm extends Component {
               items={["inches", "centimetres"]}
               selectedItem={form.rooms[form.selectedRoom].windows[form.selectedWindow].dimensions.units}
               handleChange={this._handleChange.bind(this)}/>
+
           </div>
+
+          <Typography className={classes.typography} variant="subtitle1">Fabric</Typography>
 
           {/*Work Sheets Select*/
 
             (<div className={classes.row}>
                 <OutlinedDropdown
-                  title="Worksheet"
-                  helperText="Select a Worksheet"
+                  title="BlindType"
+                  helperText="Select a Blind Type"
                   items={workbook.SheetNames.filter(((a,i)=>i%2===0))}
-                  selectedItem={form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedWorksheet}
+                  selectedItem={form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedBlindType}
                   handleChange={this._handleChange.bind(this)}/>
                 <OutlinedDropdown
                   title="Fabric"
                   helperText="Select a Fabric"
-                  items={/*this.props.form.selectedWorksheet === 'Interlude' ? this.props.form.priceGroups.slice(0,4) : this.props.form.priceGroups*/
+                  items={/*this.props.form.selectedBlindType === 'Interlude' ? this.props.form.priceGroups.slice(0,4) : this.props.form.priceGroups*/
                     Object.keys(form.fabricToPriceGroupMapping)
                   }
                   selectedItem={form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedFabric}
@@ -433,14 +455,46 @@ class TextileForm extends Component {
                   title="PriceGroup"
                   helperText="Select a Price Group"
                   hidden={true}
-                  items={form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedWorksheet === 'Interlude' ? form.priceGroups.slice(0,4) : form.priceGroups}
+                  items={form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedBlindType === 'Interlude' ? form.priceGroups.slice(0,4) : form.priceGroups}
                   selectedItem={form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedPriceGroup}
                   handleChange={this._handleChange.bind(this)}/>
               </div>)
           }
 
+
+          <div>
+            <Typography variant="subtitle1">Hem Options </Typography>
+          </div>
+          <OutlinedDropdown
+            title="SelectedHem"
+            helperText="Select a Hembar type"
+            items={form.hembars}
+            selectedItem={form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedHem}
+            handleChange={this._handleChange.bind(this)}/>
+
+        {/* Motorization Panel*/}
+          <div>
+            <InputLabel>Motorization</InputLabel>
+            <Checkbox
+              id="show-motorization"
+              checked={form.rooms[form.selectedRoom].windows[form.selectedWindow].showMotorization}
+              onChange={this._handleChange.bind(this)}
+              value={form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedMotorization}
+            />
+            {
+              form.rooms[form.selectedRoom].windows[form.selectedWindow].showMotorization && (
+                  <OutlinedDropdown
+                    title="selected-motorization"
+                    helperText="Select a Motorization type"
+                    items={form.motorizations}
+                    selectedItem={form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedMotorization}
+                    handleChange={this._handleChange.bind(this)}/>)
+            }
+          </div>
+
           <AddValanceOption
             form={form}
+            disabled={form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedBlindType === 'Vision' ? true : false}
             window={form.rooms[form.selectedRoom].windows[form.selectedWindow]}
             handleChange={this._handleChange.bind(this)}/>
 
@@ -452,7 +506,7 @@ class TextileForm extends Component {
               grandTotal.toFixed(2).toString()
           } </Typography>
           <IconButton id="download-form" onClick={this._handleClick.bind(this)} color="primary" className={classes.button} aria-label="Add to shopping cart" size="large">
-            <CloudDownloadIcon onClick={(e)=> this._handleClick({target:{id:'download-form', value:e.target.value}})} />
+            <CloudDownloadIcon/>
           </IconButton>
           </div>
         </div>

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import classNames from 'classnames';
 
 import Button from '@material-ui/core/Button';
-//import Fab from '@material-ui/core/Fab';
+import Fab from '@material-ui/core/Fab';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -63,9 +63,9 @@ class RoomPanel extends Component {
 
             <div style={{ maxWidth:'12rem', textAlign:'center'}}>
               <Typography variant="subtitle2">Add a room</Typography>
-              <Button className={classes.fab} onClick={handleClick} id="add-room" size="small" variant="fab">
+              <Fab className={classes.fab} onClick={handleClick} id="add-room" size="small">
                 <AddIcon onClick={(e)=>handleClick({target:{id:'add-room'}})}></AddIcon>
-              </Button>
+              </Fab>
             </div>
 
           </div>
@@ -94,9 +94,9 @@ class RoomPanel extends Component {
                     value={rooms[selectedRoom].name}
                     onChange={handleChange}
                     />
-                  <Button className={classes.fab} disabled={rooms.length < 2} onClick={handleClick} id="remove-room" size="small" variant="fab">
-                      <RemoveIcon onClick={(e)=>handleClick({target:{id:'remove-room'}})}></RemoveIcon>
-                    </Button>
+                  <Fab className={classes.fab} disabled={rooms.length < 2} onClick={handleClick} id="remove-room" size="small">
+                    <RemoveIcon onClick={(e)=>handleClick({target:{id:'remove-room'}})}></RemoveIcon>
+                  </Fab>
                   </div>
               </div>
               <TextField

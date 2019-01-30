@@ -4,7 +4,7 @@ const id = shortid.generate();
 const initialState = {
     projectId: id,
     clientName: `client-${id}`,
-    selectedWorksheet:'',
+    selectedBlindType:'',
     worksheets:[],
     fabricToPriceGroupMapping: {
       "Cottonwood":"PG1",
@@ -60,10 +60,10 @@ const initialState = {
       "Bubble":"PG10",
       "CSR 103":"PG10",
     },
+    hembars:['Plain Hem', 'Slim Bar', 'Wrapped Accubar Hem Bar & Wrapped Hem Bar'],
+    motorizations:['Sun Glo','Somfy'],
     priceGroups:["PG1","PG2","PG3","PG4","PG5","PG6","PG7","PG8","PG9","PG10"],
     priceGroupMap:["A5:S24", "A30:S49", "A55:S74", "A80:S99","A105:S124", "A130:S149", "A155:S174","A180:S199","A205:S224","A230:S249"],
-    showValance: false,
-    selectedValance: 'R Valance',
     priceGroupToValenceMapping: {
       "PG1":[],
       "PG2":[],
@@ -90,9 +90,12 @@ const initialState = {
             width: 30
           },
           selectedValanceOption:'Decora 8',
-          selectedWorksheet:'Roller',
+          selectedBlindType:'Roller',
           selectedFabric:'Cottonwood',
+          selectedHem:'Plain Hem',
+          selectedMotorization:'Sun Glo',
           selectedPriceGroup:'PG1',
+          showMotorization:false,
           showValance:false,
           total:155.95
         }
@@ -117,13 +120,13 @@ const form = (state = initialState, action) => {
       case 'WORKBOOK_IMPORT_SUCCESS':
         return {
             ...state,
-            selectedWorksheet:action.payload.SheetNames[0],
+            selectedBlindType:action.payload.SheetNames[0],
             worksheets:action.payload.SheetNames
         }
       case 'SELECT_WORKSHEET':
         return {
             ...state,
-            selectedWorksheet:action.payload,
+            selectedBlindType:action.payload,
             selectedValance: `${action.payload.charCodeAt(0).toUpperCase()} Valance`,
             activeSheet:state.worksheets.find(ws=>ws)
         }
