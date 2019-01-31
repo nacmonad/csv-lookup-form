@@ -404,7 +404,7 @@ class TextileForm extends Component {
         <div className={classes.root}>
           <Typography className={classes.typography} variant="title">Interactive Pricing Form</Typography>
           <Typography className={classes.typography} variant="subtitle1">Project Id.: {form.projectId}</Typography>
-          <TextField id="project-name" label="Client Name" value={form.clientName} onChange={this._handleChange.bind(this)}/>
+          <TextField id="client-name" label="Client Name" value={form.clientName} onChange={this._handleChange.bind(this)}/>
 
           <div className={classes.column}>
             <RoomPanel handleClick={this._handleClick.bind(this)} handleChange={this._handleChange.bind(this)} rooms={form.rooms} selectedRoom={form.selectedRoom}/>
@@ -505,7 +505,7 @@ class TextileForm extends Component {
             <Typography variant="display2"><b>Total:</b> {
               grandTotal.toFixed(2).toString()
           } </Typography>
-          <IconButton id="download-form" onClick={this._handleClick.bind(this)} color="primary" className={classes.button} aria-label="Add to shopping cart" size="large">
+          <IconButton id="download-form" disabled={windowTotal === -1} onClick={this._handleClick.bind(this)} color="primary" className={classes.button} aria-label="Add to shopping cart" size="large">
             <CloudDownloadIcon onClick={(e)=>this._handleClick({target:{id:'download-form', value:e.target.value}})}/>
           </IconButton>
           </div>

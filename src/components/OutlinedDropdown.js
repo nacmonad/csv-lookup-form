@@ -25,7 +25,7 @@ const styles = theme => ({
    marginTop: 16,
  },
  menu: {
-   width: 200,
+   //width: 200,
  },
 })
 
@@ -57,6 +57,7 @@ class OutlinedDropdown extends Component {
            MenuProps: {
              className: classes.menu,
            },
+           autoWidth:true
          }}
          helperText={helperText}
          margin="normal"
