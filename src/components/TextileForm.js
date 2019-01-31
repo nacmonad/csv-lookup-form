@@ -77,7 +77,7 @@ class TextileForm extends Component {
         formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].showMotorization = !formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].showMotorization;
         this.props.setForm(formCopy)
         break;
-      case "selected-motorization":
+      case "selectedmotorization":
         formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedMotorization = e.target.value;
         this.props.setForm(formCopy)
         break;
@@ -484,7 +484,7 @@ class TextileForm extends Component {
             {
               form.rooms[form.selectedRoom].windows[form.selectedWindow].showMotorization && (
                   <OutlinedDropdown
-                    title="selected-motorization"
+                    title="selectedMotorization"
                     helperText="Select a Motorization type"
                     items={form.motorizations}
                     selectedItem={form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedMotorization}
