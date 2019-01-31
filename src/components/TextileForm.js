@@ -116,7 +116,7 @@ class TextileForm extends Component {
         break;
       case "blindtype":
         formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedBlindType = e.target.value
-        formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedValanceOption = `${e.target.value.charAt(0).toUpperCase()} Valance`
+        //formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedValanceOption = `${e.target.value.charAt(0).toUpperCase()} Valance`
         this.props.setForm(formCopy)
         break;
       case "fabric":
@@ -506,8 +506,18 @@ class TextileForm extends Component {
               grandTotal.toFixed(2).toString()
           } </Typography>
           <IconButton id="download-form" onClick={this._handleClick.bind(this)} color="primary" className={classes.button} aria-label="Add to shopping cart" size="large">
-            <CloudDownloadIcon/>
+            <CloudDownloadIcon onClick={(e)=>this._handleClick({target:{id:'download-form', value:e.target.value}})}/>
           </IconButton>
+          </div>
+          <div className={classes.row}>
+            {grandTotal.toString() === 'NaN' &&
+              <div >
+                <Typography variant="subtitle1" color="secondary">Error: You picked an unavailable dimension.</Typography>
+              </div>}
+            {grandTotal === -1 &&
+              <div >
+                <Typography variant="subtitle1" color="secondary">Error: You have an incorrect fabric or incompatible selection.</Typography>
+              </div>}
           </div>
         </div>
       )

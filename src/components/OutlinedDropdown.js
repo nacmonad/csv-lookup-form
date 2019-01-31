@@ -41,7 +41,7 @@ class OutlinedDropdown extends Component {
   }
   render(){
     const {classes, handleChange, selectedItem, hidden, items, title, helperText} = this.props;
-
+    console.log(handleChange)
     return (
       <div className={ hidden ? classes.hidden : classes.root}>
         <TextField
@@ -51,8 +51,9 @@ class OutlinedDropdown extends Component {
          name={title.toLowerCase()}
          className={classes.textField}
          value={selectedItem}
-         onChange={(e)=>handleChange({target:{id:title.toLowerCase(), value:e.target.value}})}
+         onChange={ e=>handleChange({target:{id:title.toLowerCase(), value:e.target.value}}) }
          SelectProps={{
+           id:title.toLowerCase(),
            MenuProps: {
              className: classes.menu,
            },
@@ -62,7 +63,8 @@ class OutlinedDropdown extends Component {
          variant="outlined"
        >
          {items.map(item => (
-           <MenuItem key={item} value={item}>
+           <MenuItem id={title.toLowerCase()}
+             key={item} value={item}>
              {item}
            </MenuItem>
          ))}

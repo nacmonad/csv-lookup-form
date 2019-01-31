@@ -43,7 +43,12 @@ export default withStyles(styles)((props)=>{
       <div className={classes.row}>
         <Typography variant="subtitle1">Valence Options</Typography>
         <Fab id="toggle-valance" disabled={disabled} className={classes.button} onClick={handleChange}>
-          {window.showValance ? <RemoveIcon></RemoveIcon>:<AddIcon></AddIcon>}
+          {window.showValance ? <RemoveIcon
+              onClick={(e)=>{handleChange({target:{id:'toggle-valance', value:e.target.value}})}}
+            ></RemoveIcon>:
+            <AddIcon
+              onClick={(e)=>{handleChange({target:{id:'toggle-valance', value:e.target.value}})}}
+              ></AddIcon>}
         </Fab>
       </div>
       {window.showValance &&
@@ -51,6 +56,7 @@ export default withStyles(styles)((props)=>{
           title="Valance"
           id="valance-option"
           helperText="Please select valance option"
+          handleChange={handleChange}
           items={form.valanceOptions}
           selectedItem={window.selectedValanceOption !== "" ? window.selectedValanceOption : form.valanceOptions[0]}
           handleSelect={handleChange}
