@@ -8,6 +8,7 @@
     "classnames": "^2.2.6",
     "docx": "^4.7.0",
     "downloadjs": "^1.4.7",
+    "pdfmake": "^0.1.53",
     "prettyjson": "^1.2.1",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",

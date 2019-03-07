@@ -4,6 +4,8 @@ import { Document, Paragraph, Packer } from 'docx';
 import prettyjson from 'prettyjson';
 import download from 'downloadjs';
 
+
+
 const delay = (ms) => new Promise(res => setTimeout(res, ms));
 
 async function createAndDownloadFile(parsedFormObj) {
@@ -14,15 +16,24 @@ async function createAndDownloadFile(parsedFormObj) {
       dashColor: 'magenta',
       stringColor: 'white'
     });
-
     const doc = new Document();
     const paragraph = new Paragraph(fileText);
     doc.addParagraph(paragraph);
 
     const packer = new Packer();
     const b64string = await packer.toBase64String(doc)
-
     return await download(fileText, `${parsedFormObj.clientName}.docx`, "text/plain");
+    // const docDefinition = {
+    //   content: [
+    //     {
+    //     	text: fileText,
+    //     	pageBreak: 'after'
+    //     }
+    //   ]
+    // }
+    //
+    //
+    // return await window.pdfMake.createPdf(docDefinition).download();
   } catch (e) {
     console.log(e)
     throw e

@@ -6,6 +6,10 @@ const initialState = {
     clientName: `client-${id}`,
     selectedBlindType:'',
     worksheets:[],
+    cordPlacements:['Left', 'Right'],
+    endCapOptions:['Gray', 'Blue', 'White'],
+    powerControlOptions:[{type:'SG DC Charger', price:36.00},{type:'SG Solar Panel', price:84.00}],
+    remoteOptions:[{type:'SG 1 Channel Standard', price:60.00},{type:'SG 15 Channel Standard', price:74.00},{type:'SG 1 Channel Touch', price:91.00},{type:'SG 15 Channel Touch', price:105.00},{type:'SG Connector Control Hub', price:393.00}],
     fabricToPriceGroupMapping: {
       "Cottonwood":"PG1",
       "Linen":"PG1",
@@ -93,9 +97,13 @@ const initialState = {
           selectedBlindType:'Roller',
           selectedFabric:'Cottonwood',
           selectedHem:'Plain Hem',
+          selectedEndCap:'Gray',
           selectedMotorization:'Sun Glo',
           selectedPriceGroup:'PG1',
           showMotorization:false,
+          selectedCordPlacement: 'Left',
+          selectedPowerControl:'SG DC Charger',
+          selectedRemote:'SG 1 Channel Standard',
           showValance:false,
           total:155.95
         }
