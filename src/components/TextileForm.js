@@ -181,20 +181,27 @@ class TextileForm extends Component {
           description: ``,
           windows:[{
             id:shortid.generate(),
-            name:`Window ${formCopy.rooms[formCopy.selectedRoom].windows.length}`,
+            name:`Window ${formCopy.rooms[formCopy.selectedRoom].windows.length+1}`,
             description: ``,
             dimensions: {
               units: 'inches',
-              height: 30,
-              width: 30
+              width:30,
+              height:30
             },
             selectedValanceOption:'Decora 8',
             selectedBlindType:'Roller',
             selectedFabric:'Cottonwood',
+            selectedHem:'Plain Hem',
+            selectedEndCap:'Gray',
+            selectedMotorization:'Sun Glo',
             selectedPriceGroup:'PG1',
+            showMotorization:false,
+            selectedCordPlacement: 'Left',
+            selectedPowerControl:'SG DC Charger',
+            selectedRemote:'SG 1 Channel Standard',
             showValance:false,
-            total:155.95,
-          },]
+            total:155.95
+          }]
         })
         this.props.setForm(formCopy)
 
