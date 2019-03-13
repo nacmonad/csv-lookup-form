@@ -73,6 +73,10 @@ class TextileForm extends Component {
     let formCopy = {...this.props.form}
     //let thisWindow = formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow];
     switch(e.target.id) {
+      case "selectedhemcolor":
+      formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedHemColor = e.target.value;
+
+        break;
       case "selectedpowercontrol":
         formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedPowerControl = e.target.value;
         break;
@@ -192,6 +196,7 @@ class TextileForm extends Component {
             selectedBlindType:'Roller',
             selectedFabric:'Cottonwood',
             selectedHem:'Plain Hem',
+            selectedHemColor:'White',
             selectedEndCap:'Gray',
             selectedMotorization:'Sun Glo',
             selectedPriceGroup:'PG1',
@@ -220,6 +225,7 @@ class TextileForm extends Component {
           selectedBlindType:'Roller',
           selectedFabric:'Cottonwood',
           selectedHem:'Plain Hem',
+          selectedHemColor:'White',
           selectedEndCap:'Gray',
           selectedMotorization:'Sun Glo',
           selectedPriceGroup:'PG1',
@@ -433,20 +439,20 @@ class TextileForm extends Component {
           </div>
           <div className={classes.column}>
             <Typography className={classes.typography} variant="subtitle1">Dimensions and Units</Typography>
-
-            <WidthHeightTextInput
-              maxWidth={activeTable[0] ? ( form.rooms[form.selectedRoom].windows[form.selectedWindow].dimensions.units==='inches' ? activeTable[0][activeTable[0].length-1] : activeTable[0][activeTable[0].length-1]/CM_TO_INCH) : 0}
-              maxHeight={activeTable[0] ? ( form.rooms[form.selectedRoom].windows[form.selectedWindow].dimensions.units==='inches' ? activeTable[activeTable.length-1][0] : activeTable[activeTable.length-1][0]/CM_TO_INCH) : 0}
-              dimensions={form.rooms[form.selectedRoom].windows[form.selectedWindow].dimensions}
-              handleChange={this._handleChange.bind(this)}
-              />
-            <OutlinedDropdown
-              title="Units"
-              helperText="Please select measurement unit"
-              items={["inches", "centimetres"]}
-              selectedItem={form.rooms[form.selectedRoom].windows[form.selectedWindow].dimensions.units}
-              handleChange={this._handleChange.bind(this)}/>
-
+            <div className={classes.row} >
+              <WidthHeightTextInput
+                maxWidth={activeTable[0] ? ( form.rooms[form.selectedRoom].windows[form.selectedWindow].dimensions.units==='inches' ? activeTable[0][activeTable[0].length-1] : activeTable[0][activeTable[0].length-1]/CM_TO_INCH) : 0}
+                maxHeight={activeTable[0] ? ( form.rooms[form.selectedRoom].windows[form.selectedWindow].dimensions.units==='inches' ? activeTable[activeTable.length-1][0] : activeTable[activeTable.length-1][0]/CM_TO_INCH) : 0}
+                dimensions={form.rooms[form.selectedRoom].windows[form.selectedWindow].dimensions}
+                handleChange={this._handleChange.bind(this)}
+                />
+              <OutlinedDropdown
+                title="Units"
+                helperText="Please select measurement unit"
+                items={["inches", "centimetres"]}
+                selectedItem={form.rooms[form.selectedRoom].windows[form.selectedWindow].dimensions.units}
+                handleChange={this._handleChange.bind(this)}/>
+            </div>
           </div>
 
           <Typography className={classes.typography} variant="subtitle1">Fabric</Typography>
@@ -488,36 +494,63 @@ class TextileForm extends Component {
                   handleChange={this._handleChange.bind(this)}/>
             </div>
             <div>
-              <Typography variant="subtitle1">Hem Cap Options </Typography>
+              <Typography variant="subtitle1">Hem Bar Colour </Typography>
+                <OutlinedDropdown
+                  title="SelectedHemColor"
+                  helperText="Select a Hem Bar Colour"
+                  items={form.hemColorOptions}
+                  selectedItem={form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedHemColor}
+                  handleChange={this._handleChange.bind(this)}/>
+            </div>
+            <div>
+              <Typography variant="subtitle1">End Cap Colour </Typography>
                 <OutlinedDropdown
                   title="SelectedEndCap"
-                  helperText="Select a Hembar type"
+                  helperText="Select an End Cap colour"
                   items={form.endCapOptions}
                   selectedItem={form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedEndCap}
                   handleChange={this._handleChange.bind(this)}/>
             </div>
-          </div>
+        </div>
+
         {/* Motorization Panel*/}
-          <div >
-            <InputLabel>Add Motorization</InputLabel>
-            <Checkbox
-              id="show-motorization"
-              checked={form.rooms[form.selectedRoom].windows[form.selectedWindow].showMotorization}
-              onChange={this._handleChange.bind(this)}
-              value={form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedMotorization}
-            />
+          <div className={classes.row} style={{alignItems:'baseline'}}>
             {
               form.rooms[form.selectedRoom].windows[form.selectedWindow].showMotorization && (
-                  <OutlinedDropdown
-                    title="selectedMotorization"
-                    helperText="Select a Motorization type"
-                    items={form.motorizations}
-                    selectedItem={form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedMotorization}
-                    handleChange={this._handleChange.bind(this)}/>)
+                <div className={classes.row} style={{alignItems:'baseline'}}>
+                  <div>
+                    <InputLabel>Motorization Option</InputLabel>
+                    <OutlinedDropdown
+                      title="selectedMotorization"
+                      helperText="Select a Motorization type"
+                      items={form.motorizations}
+                      selectedItem={form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedMotorization}
+                      handleChange={this._handleChange.bind(this)}/>
+                  </div>
+                  <div>
+                    <Typography variant="subtitle1">Power Control Options </Typography>
+                      <OutlinedDropdown
+                        title="SelectedPowerControl"
+                        helperText="Select a Power control type"
+                        items={form.powerControlOptions.map(o=>o.type)}
+                        selectedItem={form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedPowerControl}
+                        handleChange={this._handleChange.bind(this)}/>
+                  </div>
+                  <div>
+                    <Typography variant="subtitle1">Remote Options </Typography>
+                      <OutlinedDropdown
+                        title="SelectedRemote"
+                        helperText="Select a Remote type"
+                        items={form.remoteOptions.map(o=>o.type)}
+                        selectedItem={form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedRemote}
+                        handleChange={this._handleChange.bind(this)}/>
+                  </div>
+                </div>
+              )
             }
             {
               !form.rooms[form.selectedRoom].windows[form.selectedWindow].showMotorization && (
-                <div>
+                <div style={{paddingTop:'0.75rem'}}>
                   <InputLabel>Cord Placement</InputLabel>
                   <OutlinedDropdown
                     title="cordPlacement"
@@ -527,28 +560,17 @@ class TextileForm extends Component {
                     handleChange={this._handleChange.bind(this)}/>
                 </div>)
             }
-          </div>
-          {}
-          <div style={{display:'flex', flexDirection:'row'}}>
             <div>
-              <Typography variant="subtitle1">Power Control Options </Typography>
-                <OutlinedDropdown
-                  title="SelectedPowerControl"
-                  helperText="Select a Power control type"
-                  items={form.powerControlOptions.map(o=>o.type)}
-                  selectedItem={form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedPowerControl}
-                  handleChange={this._handleChange.bind(this)}/>
-            </div>
-            <div>
-              <Typography variant="subtitle1">Remote Options </Typography>
-                <OutlinedDropdown
-                  title="SelectedRemote"
-                  helperText="Select a Remote type"
-                  items={form.remoteOptions.map(o=>o.type)}
-                  selectedItem={form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedRemote}
-                  handleChange={this._handleChange.bind(this)}/>
+              <InputLabel>{form.rooms[form.selectedRoom].windows[form.selectedWindow].showMotorization ? `Remove Motorization` : `Add Motorization`}</InputLabel>
+              <Checkbox
+                id="show-motorization"
+                checked={form.rooms[form.selectedRoom].windows[form.selectedWindow].showMotorization}
+                onChange={this._handleChange.bind(this)}
+                value={form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedMotorization}
+              />
             </div>
           </div>
+
 
           <AddValanceOption
             form={form}

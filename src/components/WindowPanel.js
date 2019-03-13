@@ -19,7 +19,7 @@ import { withStyles } from '@material-ui/core/styles';
 const styles = theme => ({
   root:{
     margin:'0.5rem 0 0.5rem 0',
-    maxWidth:'32rem'
+    minWidth:'100%'
 
   },
   container:{
@@ -31,7 +31,7 @@ const styles = theme => ({
     maxWidth:'8rem'
   },
   descriptionField:{
-    maxWidth:'32rem'
+    minWidth:'100%'
   },
   fab: {
     //margin:theme.spacing.unit,

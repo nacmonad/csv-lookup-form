@@ -22,7 +22,7 @@ export default withStyles(styles)((props) => {
     console.log(maxWidth)
     console.log(maxHeight)
     return (
-    <div className={classes.root}>
+    <div className={classes.root} style={{paddingTop:'1.5rem'}}>
         <TextField
           title="width"
           id="width"
