@@ -19,7 +19,7 @@ import { withStyles } from '@material-ui/core/styles';
 const styles = theme => ({
   root:{
     margin:'0.5rem 0 0.5rem 0',
-    minWidth:'100%'
+    maxWidth:'80%'
 
   },
   container:{
@@ -31,7 +31,7 @@ const styles = theme => ({
     maxWidth:'8rem'
   },
   descriptionField:{
-    minWidth:'100%'
+    maxWidth:'80%'
   },
   fab: {
     //margin:theme.spacing.unit,
@@ -59,7 +59,7 @@ class WindowPanel extends Component {
     const {classes, handleClick, handleChange, windows, selectedWindow} = this.props;
     return (
       <div className={classes.root} >
-        <div className={classes.row}>
+        <div className={classNames(classes.row, classes.descriptionField)}>
           <Typography className={classes.typography} variant="subtitle1">Windows</Typography>
 
             <div style={{maxWidth:'12rem', textAlign:'center'}}>
