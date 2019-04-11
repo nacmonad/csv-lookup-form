@@ -8,7 +8,6 @@ const styles = theme => ({
   root:{
     margin:'0.5rem 0 0.5rem 0',
     minWidth:'8rem',
-    maxWidth:'12rem'
   },
   hidden:{
     display:'none'
@@ -41,7 +40,8 @@ class OutlinedDropdown extends Component {
   }
   render(){
     const {classes, handleChange, selectedItem, hidden, items, title, helperText} = this.props;
-
+    console.log(`${title} --> ${selectedItem}`)
+    console.log(items)
     return (
       <div className={ hidden ? classes.hidden : classes.root}>
         <TextField
