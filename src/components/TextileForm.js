@@ -63,6 +63,9 @@ const styles = theme => ({
   chip: {
     margin: theme.spacing.unit,
   },
+  marginBetween: {
+    margin: '0 0.5rem'
+  }
 })
 
 class TextileForm extends Component {
@@ -83,49 +86,49 @@ class TextileForm extends Component {
     //let thisWindow = formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow];
     switch(e.target.id) {
       case "selectedsomfypoweroption":
-        formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedSomfyPowerOption = e.target.value;
+        formCopy.rooms[formCopy.selectedRoom].selectedSomfyPowerOption = e.target.value;
         break;
       case "selectedsomfycontrolsensoroption":
-        formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedSomfyControlSensorOption = e.target.value;
-        formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].extras.push(formCopy.SomfyControlSensorOptions.find(cso=>cso.type === e.target.value))
+        formCopy.rooms[formCopy.selectedRoom].selectedSomfyControlSensorOption = e.target.value;
+        formCopy.rooms[formCopy.selectedRoom].extras.push(formCopy.SomfyControlSensorOptions.find(cso=>cso.type === e.target.value))
         break;
       case "selectedsomfymotorizationoption":
         let code = formCopy.SomfyMotorOptions.find(mo=>mo.type === e.target.value).code;
         console.log("got product code: " + code)
-        formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedSomfyMotorizationOption = e.target.value;
-        formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedSomfyPowerOption = formCopy.SomfyPowerOptions[code][0].type;
+        formCopy.rooms[formCopy.selectedRoom].selectedSomfyMotorizationOption = e.target.value;
+        formCopy.rooms[formCopy.selectedRoom].selectedSomfyPowerOption = formCopy.SomfyPowerOptions[code][0].type;
         break;
       case "selectedhemcolor":
         formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedHemColor = e.target.value;
         break;
       case "selectedsunglopowercontrol":
-        formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedSunGloPowerControl = e.target.value;
+        formCopy.rooms[formCopy.selectedRoom].selectedSunGloPowerControl = e.target.value;
         break;
       case "selectedsungloremote":
-        formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedSunGloRemote = e.target.value;
+        formCopy.rooms[formCopy.selectedRoom].selectedSunGloRemote = e.target.value;
 
         break;
       case "selectedsungloconnectionhub":
-        formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedSunGloConnectionHub = e.target.value;
+        formCopy.rooms[formCopy.selectedRoom].selectedSunGloConnectionHub = e.target.value;
         break;
 
       case "selectedmotorizationseries":
-        formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedMotorizationSeries = e.target.value;
+        formCopy.rooms[formCopy.selectedRoom].selectedMotorizationSeries = e.target.value;
         break;
       case "show-motorization":
-        formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].showMotorization = !formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].showMotorization;
-        if(formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].showMotorization) {
+        formCopy.rooms[formCopy.selectedRoom].showMotorization = !formCopy.rooms[formCopy.selectedRoom].showMotorization;
+        if(formCopy.rooms[formCopy.selectedRoom].showMotorization) {
           //no cordplacement when motorization is true
-          formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedCordPlacement = 'None';
+          formCopy.rooms[formCopy.selectedRoom].selectedCordPlacement = 'None';
         } else {
-          formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedCordPlacement = 'Left';
+          formCopy.rooms[formCopy.selectedRoom].selectedCordPlacement = 'Left';
         }
         break;
       case "selectedendcap":
         formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedEndCap = e.target.value;
         break;
       case "cordplacement":
-        formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedCordPlacement = e.target.value;
+        formCopy.rooms[formCopy.selectedRoom].selectedCordPlacement = e.target.value;
         break;
       case "client-name":
         formCopy.clientName = e.target.value
@@ -189,10 +192,10 @@ class TextileForm extends Component {
 
     switch(e.target.id) {
       case "removeExtra":
-        let i = formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].extras.findIndex(ext=>ext.type === v);
+        let i = formCopy.rooms[formCopy.selectedRoom].extras.findIndex(ext=>ext.type === v);
 
-        formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].extras.splice(i,1);
-        
+        formCopy.rooms[formCopy.selectedRoom].extras.splice(i,1);
+
         this.props.setForm(formCopy)
 
         break;
@@ -226,26 +229,37 @@ class TextileForm extends Component {
               width:30,
               height:30
             },
+            extras:[],
             selectedValanceOption:'Decora 8',
             selectedBlindType:'Roller',
-            selectedFabric:formCopy.rooms[formCopy.selectedRoom].windows[formCopy.rooms[formCopy.selectedRoom].windows.length-1].selectedFabric,
+            selectedFabric: formCopy.rooms[formCopy.selectedRoom].windows[formCopy.rooms[formCopy.selectedRoom].windows.length-1].selectedFabric,
             selectedHem:'Plain Hem',
             selectedHemColor:'White',
-            selectedEndCap:'Gray',
-            selectedSomfyMotorizationOption: `SMB3`,
-            selectedSomfyPowerOption: 0,
-            selectedSomfyControlOptions: [],
+            selectedEndCap:'Grey',
+            selectedSomfyMotorizationOption: `Roller Shade, Interlude, Illusions - R28`,
+            selectedSomfyPowerOption: `12V Reloadable Lithium Battery Tube`,
+            selectedSomfyControlSensorOption: `Telis 1 Channel RTS Remote Pure`,
+            selectedSomfyListControls:[],
             selectedMotorizationSeries:'Sun Glo',
-            selectedSunGloMotorizationOption: `Default`, // has default sun glo motor
-            selectedSunGloConnectionHub:'None',
+            selectedSunGloMotorizationOption: `Default`,
+            selectedSunGloConnectionHub:'SG Connector Control Hub',
             selectedPriceGroup:'PG1',
             showMotorization:false,
             selectedCordPlacement: 'Left',
-            selectedSunGloPowerControl:'SG DC Charger',
-            selectedSunGloRemote:'SG 1 Channel Standard',
             showValance:false,
             total:155.95
-          }]
+          }],
+          showMotorization:false,
+          selectedSomfyMotorizationOption: `Roller Shade, Interlude, Illusions - R28`,
+          selectedSomfyPowerOption: `12V Reloadable Lithium Battery Tube`,
+          selectedSomfyControlSensorOption: `Telis 1 Channel RTS Remote Pure`,
+          selectedSomfyListControls:[],
+          selectedMotorizationSeries:'Sun Glo',
+          selectedSunGloMotorizationOption: `Default`,
+          selectedSunGloConnectionHub:'None',
+          selectedSunGloPowerControl:'SG DC Charger',
+          selectedSunGloRemote:'SG 1 Channel Standard',
+          extras:[],
         })
         this.props.setForm(formCopy)
 
@@ -260,23 +274,13 @@ class TextileForm extends Component {
             width:30,
             height:30
           },
+          extras:[],
           selectedValanceOption:'Decora 8',
           selectedBlindType:'Roller',
-          selectedFabric:formCopy.rooms[formCopy.selectedRoom].windows[formCopy.rooms[formCopy.selectedRoom].windows.length-1].selectedFabric,
+          selectedFabric: formCopy.rooms[formCopy.selectedRoom].windows[formCopy.rooms[formCopy.selectedRoom].windows.length-1].selectedFabric,
           selectedHem:'Plain Hem',
           selectedHemColor:'White',
-          selectedEndCap:'Gray',
-          selectedSomfyMotorizationOption: `SMB3`,
-          selectedSomfyPowerOption: 0,
-          selectedSomfyControlOptions: [],
-          selectedMotorizationSeries:'Sun Glo',
-          selectedSunGloMotorizationOption: `Default`, // has default sun glo motor
-          selectedSunGloConnectionHub:'None',
-          selectedPriceGroup:'PG1',
-          showMotorization:false,
-          selectedCordPlacement: 'Left',
-          selectedSunGloPowerControl:'SG DC Charger',
-          selectedSunGloRemote:'SG 1 Channel Standard',
+          selectedEndCap:'Grey',
           showValance:false,
           total:155.95
         })
@@ -322,7 +326,7 @@ class TextileForm extends Component {
       for(var i=0; i<tableHeight; i++){
         //ignore 0,0
         if(i===0) {
-          //scan header row on first iteration
+          //scan header row on fir st iteration
           findCol = at[i].slice(1).findIndex(c=>parseInt(c)>=textileWidthInInches)+1;
         } else {
           //scans first element of each row on subsequent
@@ -372,14 +376,7 @@ class TextileForm extends Component {
       }
     }
 
-    //ADDITIONAL MOTORIZATION OPTIONS
-    if(this.props.form.rooms[this.props.form.selectedRoom].windows[this.props.form.selectedWindow].showMotorization) {
-      console.log("CALCULATE MOTORIZATION")
-      //additional power and remote OPTIONS
-      //windowTotal += this.props.form.motorizationSeries.find(m=>m === this.props.form.rooms[this.props.form.selectedRoom].windows[this.props.form.selectedWindow].selectedMotorizationSeries);
-      //windowTotal += this.props.form.powerControlOptions.find(pc=>pc.type === this.props.form.rooms[this.props.form.selectedRoom].windows[this.props.form.selectedWindow].selectedPowerControl).price;
-      //windowTotal += this.props.form.remoteOptions.find(ro=>ro.type === this.props.form.rooms[this.props.form.selectedRoom].windows[this.props.form.selectedWindow].selectedRemote).price;
-    }
+
 
 
 
@@ -388,7 +385,9 @@ class TextileForm extends Component {
   _calculateGrandTotal(){
 
     let windows = []
-    let grandTotal = -1.00;
+    let grandTotal = 0.00;
+
+    //get each window's total
     if(this.props.form.rooms.length > 1) {
       windows = this.props.form.rooms.reduce((w,r2)=>{
         return [...w, ...r2.windows];
@@ -398,7 +397,34 @@ class TextileForm extends Component {
       //grandTotal = windowTotal
     }
 
-    grandTotal = parseFloat(windows.reduce((sum,w)=>sum+w.total, 0))
+    //add per room motorization costs
+    this.props.form.rooms.forEach((r,i)=>{
+      if(r.showMotorization) {
+        if(r.selectedMotorizationSeries === 'Sun Glo') {
+          grandTotal += 360.00 //default sunglo rechargeable motor  this should be its own object in the form state
+          grandTotal += this.props.form.connectionHubOptions.find(ch=>ch.type === r.selectedSunGloConnectionHub).price;
+          grandTotal += this.props.form.remoteOptions.find(ro=>ro.type === r.selectedSunGloRemote).price;
+          grandTotal += this.props.form.powerControlOptions.find(pc=>pc.type === r.selectedSunGloPowerControl).price;
+
+          // windowTotal += this.props.form.powerControlOptions.find(pc=>pc.type === r.windows[this.props.form.selectedWindow].selectedSunGloPowerControl).price;
+          // windowTotal += this.props.form.remoteOptions.find(ro=>ro.type === r.windows[this.props.form.selectedWindow].selectedSunGloRemote).price;
+        }
+        if(r.selectedMotorizationSeries === 'Somfy') {
+          let motorCode = this.props.form.SomfyMotorOptions.find(mo=>mo.type === r.selectedSomfyMotorizationOption).code
+
+          grandTotal += this.props.form.SomfyMotorOptions.find(mo=>mo.type === r.selectedSomfyMotorizationOption).price;
+          grandTotal += this.props.form.SomfyPowerOptions[motorCode].find(po=>po.type === r.selectedSomfyPowerOption).price;
+          /* Control Sensor Options & Extra Items -- Should adapt and abstract this! */
+          r.extras.forEach(extra=>{
+            grandTotal += extra.price;
+          })
+        }
+      }
+    });
+
+
+
+    grandTotal += parseFloat(windows.reduce((sum,w)=>sum+w.total, 0))
 
     return grandTotal.toFixed(2);
   }
@@ -414,15 +440,30 @@ class TextileForm extends Component {
         if(w.showValance) {
           w.ValanceOption = w.selectedValanceOption;
         }
-        if(w.showMotorization) {
-          w.MotorizationOption = w.selectedMotorization;
+        if(r.showMotorization && w.selectedMotorizationSeries === 'Sun Glo') {
+          w.MotorizationOption = w.selectedMotorizationSeries;
+          delete w.selectedSomfyPowerOption;
+          delete w.selectedSomfyListControls;
+          delete w.selectedSomfyMotorizationOption;
+          delete w.selectedSomfyControlSensorOption;
+
+        } else if (r.showMotorization && w.selectedMotorizationSeries === 'Somfy') {
+          delete w.selectedSunGloRemote;
+          delete w.selectedSunGloPowerControl;
+          delete w.selectedSunGloConnectionHub;
+          delete w.selectedSunGloMotorizationOption;
+          w.extras = w.extras.map(e=> ({
+            ...e,
+            price:parseFloat(e.price).toFixed(2)
+
+          }))
         }
         w.Fabric = w.selectedFabric;
         w.PriceGroup = w.selectedPriceGroup;
 
         delete w.id;
         delete w.showValance;
-        delete w.showMotorization;
+        delete r.showMotorization;
         delete w.selectedMotorization;
         delete w.selectedValanceOption;
         delete w.selectedFabric;
@@ -471,9 +512,11 @@ class TextileForm extends Component {
 
     const grandTotal = this._calculateGrandTotal();
 
+
     let currentWindow = form.rooms[form.selectedRoom].windows[form.selectedWindow];
 
-    let motorCode = form.SomfyMotorOptions.find(mo=>mo.type === currentWindow.selectedSomfyMotorizationOption).code
+    let motorCode = form.SomfyMotorOptions.find(mo=>mo.type === form.rooms[form.selectedRoom].selectedSomfyMotorizationOption).code
+
     console.log("MOTORCODE: " + motorCode)
     return (
         <div className={classes.root}>
@@ -574,66 +617,66 @@ class TextileForm extends Component {
 
         {/* Motorization Panel*/}
         <div>
-          <InputLabel>{currentWindow.showMotorization ? `Remove Motorization` : `Add Motorization`}</InputLabel>
+          <InputLabel>{form.rooms[form.selectedRoom].showMotorization ? `Remove Motorization` : `Add Motorization`}</InputLabel>
           <Checkbox
             id="show-motorization"
-            checked={currentWindow.showMotorization}
+            checked={form.rooms[form.selectedRoom].showMotorization}
             onChange={this._handleChange.bind(this)}
-            value={currentWindow.selectedMotorizationSeries}
+            value={form.rooms[form.selectedRoom].selectedMotorizationSeries}
           />
         </div>
 
           <div className={classes.row} style={{alignItems:'baseline'}}>
             {
-              currentWindow.showMotorization && (
+              form.rooms[form.selectedRoom].showMotorization && (
                 <div>
                   <div>
-                    <InputLabel>Motorization Option</InputLabel>
+                    <InputLabel>Room Motorization Option</InputLabel>
                     <OutlinedDropdown
                       title="selectedMotorizationSeries"
                       helperText="Select a Motorization Series"
                       items={form.motorizationSeries}
-                      selectedItem={currentWindow.selectedMotorizationSeries}
+                      selectedItem={form.rooms[form.selectedRoom].selectedMotorizationSeries}
                       handleChange={this._handleChange.bind(this)}/>
                   </div>
-                  { currentWindow.selectedMotorizationSeries === 'Sun Glo' &&
+                  { form.rooms[form.selectedRoom].selectedMotorizationSeries === 'Sun Glo' &&
                     <div>
                     <Typography variant="subtitle1">Sun Glo Options </Typography>
                     <div className={classes.row}>
-                      <div>
-                        <Typography variant="subtitle2">Power Control Options </Typography>
-                          <OutlinedDropdown
-                            title="SelectedSunGloPowerControl"
-                            helperText="Select a Power control type"
-                            items={form.powerControlOptions.map(o=>o.type)}
-                            selectedItem={currentWindow.selectedSunGloPowerControl}
-                            handleChange={this._handleChange.bind(this)}/>
-                      </div>
-                      <div>
-
+                      <div className={classes.marginBetween}>
                         <Typography variant="subtitle1">Connection Hub Options </Typography>
                           <OutlinedDropdown
                             title="SelectedSunGloConnectionHub"
                             helperText="Select a Connection Hub"
                             items={form.connectionHubOptions.map(o=>o.type)}
-                            selectedItem={currentWindow.selectedSunGloConnectionHub}
+                            selectedItem={form.rooms[form.selectedRoom].selectedSunGloConnectionHub}
                             handleChange={this._handleChange.bind(this)}/>
                       </div>
-                      <div>
 
+                      <div className={classes.marginBetween}>
+                        <Typography variant="subtitle1">Power Control Options </Typography>
+                          <OutlinedDropdown
+                            title="SelectedSunGloPowerControl"
+                            helperText="Select a Power control type"
+                            items={form.powerControlOptions.map(o=>o.type)}
+                            selectedItem={form.rooms[form.selectedRoom].selectedSunGloPowerControl}
+                            handleChange={this._handleChange.bind(this)}/>
+                      </div>
+
+                      <div className={classes.marginBetween}>
                         <Typography variant="subtitle1">Remote Options </Typography>
                           <OutlinedDropdown
                             title="SelectedSunGloRemote"
                             helperText="Select a Remote type"
                             items={form.remoteOptions.map(o=>o.type)}
-                            selectedItem={currentWindow.selectedSunGloRemote}
+                            selectedItem={form.rooms[form.selectedRoom].selectedSunGloRemote}
                             handleChange={this._handleChange.bind(this)}/>
                       </div>
                     </div>
                   </div>
                   }
 
-                  { currentWindow.selectedMotorizationSeries === 'Somfy' &&
+                  { form.rooms[form.selectedRoom].selectedMotorizationSeries === 'Somfy' &&
                     <div>
                       <Typography variant="subtitle1">Somfy Options </Typography>
                       <div className={classes.row}>
@@ -641,21 +684,21 @@ class TextileForm extends Component {
                             title="SelectedSomfyMotorizationOption"
                             helperText="Select a Motor option"
                             handleChange={this._handleChange.bind(this)}
-                            selectedItem={currentWindow.selectedSomfyMotorizationOption}
+                            selectedItem={form.rooms[form.selectedRoom].selectedSomfyMotorizationOption}
                             items={form.SomfyMotorOptions.map(o=>o.type)}
                             />
                           <OutlinedDropdown
                             title="SelectedSomfyPowerOption"
                             helperText="Select a Power option"
                             handleChange={this._handleChange.bind(this)}
-                            selectedItem={currentWindow.selectedSomfyPowerOption}
+                            selectedItem={form.rooms[form.selectedRoom].selectedSomfyPowerOption}
                             items={form.SomfyPowerOptions[motorCode].map(o=>o.type)}
                             />
                           <OutlinedDropdown
                             title="SelectedSomfyControlSensorOption"
                             helperText="Add controls and sensors"
                             handleChange={this._handleChange.bind(this)}
-                            selectedItem={currentWindow.selectedSomfyControlSensorOption}
+                            selectedItem={form.rooms[form.selectedRoom].selectedSomfyControlSensorOption}
                             items={form.SomfyControlSensorOptions.map(o=>o.type)}
                             />
                       </div>
@@ -665,23 +708,22 @@ class TextileForm extends Component {
               )
             }
             {
-              !currentWindow.showMotorization && (
+              !form.rooms[form.selectedRoom].showMotorization && (
                 <div style={{paddingTop:'0.75rem'}}>
                   <InputLabel>Cord Placement</InputLabel>
                   <OutlinedDropdown
                     title="cordPlacement"
                     helperText="Select a Cord Placement"
                     items={form.cordPlacements}
-                    selectedItem={currentWindow.selectedCordPlacement}
+                    selectedItem={form.rooms[form.selectedRoom].selectedCordPlacement}
                     handleChange={this._handleChange.bind(this)}/>
                 </div>)
             }
 
           </div>
           {
-            currentWindow.extras.length > 0 &&
-
-            form.rooms[form.selectedRoom].windows[form.selectedWindow].extras.map(extra=>{
+            form.rooms[form.selectedRoom].extras.length > 0 &&
+            form.rooms[form.selectedRoom].extras.map(extra=>{
               return (
                 <Chip
                   id="removeExtra"
@@ -704,7 +746,7 @@ class TextileForm extends Component {
             <Typography variant="display2"><b>Total:</b> {
               `$${grandTotal}`
           } </Typography>
-          <IconButton id="download-form" disabled={windowTotal === -1} onClick={this._handleClick.bind(this)} color="primary" className={classes.button} aria-label="Add to shopping cart" size="large">
+        <IconButton id="download-form" disabled={windowTotal === -1} onClick={(e)=>{this._handleClick({target:{id:'download-form'}})}} color="primary" className={classes.button} aria-label="Add to shopping cart" size="large">
             <CloudDownloadIcon/>
           </IconButton>
           </div>

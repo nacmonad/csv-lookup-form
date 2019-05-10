@@ -7,7 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 const styles = theme => ({
   root:{
     margin:'0.5rem 0 0.5rem 0',
-    minWidth:'8rem',
+    minWidth:'12rem',
   },
   hidden:{
     display:'none'

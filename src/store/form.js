@@ -98,8 +98,8 @@ const initialState = {
       description:`Sonesse 50 RTS (<47dBA).  88 lbs`,
       price: 1488.00
     }],
-    powerControlOptions:[{type:'SG DC Charger', price:36.00},{type:'SG Solar Panel', price:84.00}],
-    remoteOptions:[{type:'SG 1 Channel Standard', price:60.00},{type:'SG 15 Channel Standard', price:74.00},{type:'SG 1 Channel Touch', price:91.00},{type:'SG 15 Channel Touch', price:105.00}],
+    powerControlOptions:[{type:'None', price:0.00}, {type:'SG DC Charger', price:36.00}, {type:'SG Solar Panel', price:84.00}],
+    remoteOptions:[{type:'None', price:0.00}, {type:'SG 1 Channel Standard', price:60.00}, {type:'SG 15 Channel Standard', price:74.00},{type:'SG 1 Channel Touch', price:91.00},{type:'SG 15 Channel Touch', price:105.00}],
     connectionHubOptions:[{type:'None', price:0.00}, {type:'SG Connector Control Hub', price:393.00}],
     fabricToPriceGroupMapping: {
       "Cottonwood":"PG1",
@@ -184,29 +184,30 @@ const initialState = {
             height: 30,
             width: 30
           },
-          extras:[],
+
           selectedValanceOption:'Decora 8',
           selectedBlindType:'Roller',
           selectedFabric:'Cottonwood',
           selectedHem:'Plain Hem',
           selectedHemColor:'White',
           selectedEndCap:'Grey',
-          selectedSomfyMotorizationOption: `Roller Shade, Interlude, Illusions - R28`,
-          selectedSomfyPowerOption: `12V Reloadable Lithium Battery Tube`,
-          selectedSomfyControlSensorOption: `Telis 1 Channel RTS Remote Pure`,
-          selectedSomfyListControls:[],
-          selectedMotorizationSeries:'Sun Glo',
-          selectedSunGloMotorizationOption: `Default`,
-          selectedSunGloConnectionHub:'None',
           selectedPriceGroup:'PG1',
-          showMotorization:false,
-          selectedCordPlacement: 'Left',
-          selectedSunGloPowerControl:'SG DC Charger',
-          selectedSunGloRemote:'SG 1 Channel Standard',
           showValance:false,
           total:155.95
         }
-      ]
+      ],
+      selectedCordPlacement: 'Left',
+      showMotorization:false,
+      selectedSomfyMotorizationOption: `Roller Shade, Interlude, Illusions - R28`,
+      selectedSomfyPowerOption: `12V Reloadable Lithium Battery Tube`,
+      selectedSomfyControlSensorOption: `Telis 1 Channel RTS Remote Pure`,
+      selectedSomfyListControls:[],
+      selectedMotorizationSeries:'Sun Glo',
+      selectedSunGloMotorizationOption: `Default`,
+      selectedSunGloConnectionHub:'SG Connector Control Hub',
+      selectedSunGloPowerControl:'SG DC Charger',
+      selectedSunGloRemote:'SG 1 Channel Standard',
+      extras:[],
     }],
     selectedRoom: 0,
     selectedWindow: 0,
@@ -214,6 +215,7 @@ const initialState = {
     valances:["R Valance", "V Valance", "I Valance"],
     valanceMap:["A1:S13","A1:S7","A1:S4"],
     valanceOptions: [],
+
 }
 
 const form = (state = initialState, action) => {
