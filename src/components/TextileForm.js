@@ -75,6 +75,7 @@ class TextileForm extends Component {
     this._calculateWindowTotal = this._calculateWindowTotal.bind(this)
     this._calculateRoomTotal = this._calculateRoomTotal.bind(this)
     this._calculateGrandTotal = this._calculateGrandTotal.bind(this)
+    this._printForm = this._printForm.bind(this)
 
   }
   _handleChange(e, v) {
@@ -86,33 +87,44 @@ class TextileForm extends Component {
     switch(e.target.id) {
       case "selectedsomfypoweroption":
         formCopy.rooms[formCopy.selectedRoom].selectedSomfyPowerOption = e.target.value;
+          this.props.setForm(formCopy)
         break;
       case "selectedsomfycontrolsensoroption":
+        console.log("b4:")
+        console.log(formCopy)
         formCopy.rooms[formCopy.selectedRoom].selectedSomfyControlSensorOption = e.target.value;
         formCopy.rooms[formCopy.selectedRoom].extras.push(formCopy.SomfyControlSensorOptions.find(cso=>cso.type === e.target.value))
+        console.log("setform w ")
+        console.log(formCopy)
+          this.props.setForm(formCopy)
         break;
       case "selectedsomfymotorizationoption":
         let code = formCopy.SomfyMotorOptions.find(mo=>mo.type === e.target.value).code;
         console.log("got product code: " + code)
         formCopy.rooms[formCopy.selectedRoom].selectedSomfyMotorizationOption = e.target.value;
         formCopy.rooms[formCopy.selectedRoom].selectedSomfyPowerOption = formCopy.SomfyPowerOptions[code][0].type;
+          this.props.setForm(formCopy)
         break;
       case "selectedhemcolor":
         formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedHemColor = e.target.value;
+          this.props.setForm(formCopy)
         break;
       case "selectedsunglopowercontrol":
         formCopy.rooms[formCopy.selectedRoom].selectedSunGloPowerControl = e.target.value;
+          this.props.setForm(formCopy)
         break;
       case "selectedsungloremote":
         formCopy.rooms[formCopy.selectedRoom].selectedSunGloRemote = e.target.value;
-
+          this.props.setForm(formCopy)
         break;
       case "selectedsungloconnectionhub":
         formCopy.rooms[formCopy.selectedRoom].selectedSunGloConnectionHub = e.target.value;
+          this.props.setForm(formCopy)
         break;
 
       case "selectedmotorizationseries":
         formCopy.rooms[formCopy.selectedRoom].selectedMotorizationSeries = e.target.value;
+          this.props.setForm(formCopy)
         break;
       case "show-motorization":
         formCopy.rooms[formCopy.selectedRoom].showMotorization = !formCopy.rooms[formCopy.selectedRoom].showMotorization;
@@ -122,69 +134,89 @@ class TextileForm extends Component {
         } else {
           formCopy.rooms[formCopy.selectedRoom].selectedCordPlacement = 'Left';
         }
+          this.props.setForm(formCopy)
         break;
       case "selectedendcap":
         formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedEndCap = e.target.value;
+          this.props.setForm(formCopy)
         break;
       case "cordplacement":
         formCopy.rooms[formCopy.selectedRoom].selectedCordPlacement = e.target.value;
+          this.props.setForm(formCopy)
+        break;
+      case "project-id":
+        formCopy.projectId = e.target.value
+          this.props.setForm(formCopy)
         break;
       case "client-name":
         formCopy.clientName = e.target.value
+          this.props.setForm(formCopy)
         break;
       case "window-name":
         formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].name = e.target.value;
+          this.props.setForm(formCopy)
         break;
       case "window-description":
         formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].description = e.target.value;
+          this.props.setForm(formCopy)
         break;
       case "room-name":
         formCopy.rooms[formCopy.selectedRoom].name = e.target.value;
+          this.props.setForm(formCopy)
         break;
       case "room-description":
         formCopy.rooms[formCopy.selectedRoom].description = e.target.value;
+          this.props.setForm(formCopy)
         break;
       case "selectedRoom":
         formCopy.selectedRoom = v;
         formCopy.selectedWindow = 0; //must reset incase out of index of new windows array!
+          this.props.setForm(formCopy)
         break;
       case "selectedWindow":
         formCopy.selectedWindow = v;
+          this.props.setForm(formCopy)
         break;
       case "selectedhem":
         formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedHem = e.target.value
+          this.props.setForm(formCopy)
         break;
       case "blindtype":
         formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedBlindType = e.target.value
+          this.props.setForm(formCopy)
         break;
       case "fabric":
         formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedFabric = e.target.value;
         formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedPriceGroup = formCopy.fabricToPriceGroupMapping[e.target.value];
+          this.props.setForm(formCopy)
         break;
       case "pricegroup":
         formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedPriceGroup = e.target.value;
+          this.props.setForm(formCopy)
         break;
       case "toggle-valance":
         formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].showValance = !formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].showValance
+          this.props.setForm(formCopy)
         break;
       case "valance":
         formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].selectedValanceOption = e.target.value;
+          this.props.setForm(formCopy)
         break;
       case "units":
         formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].dimensions[e.target.id] = e.target.value;
+          this.props.setForm(formCopy)
         break;
       case "width":
       case "height":
         formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow].dimensions[e.target.id] = parseInt(e.target.value);
+          this.props.setForm(formCopy)
         break;
       default:
         console.log("unhandled ")
         console.log(e.target)
         break;
     }
-    console.log("setting new formcopy:")
-    console.log(formCopy)
-    this.props.setForm(formCopy)
+
 
   }
   _handleClick(e, v){
@@ -245,7 +277,6 @@ class TextileForm extends Component {
           selectedSomfyMotorizationOption: `Roller Shade, Interlude, Illusions - R28`,
           selectedSomfyPowerOption: `12V Reloadable Lithium Battery Tube`,
           selectedSomfyControlSensorOption: `Telis 1 Channel RTS Remote Pure`,
-          selectedSomfyListControls:[],
           selectedMotorizationSeries:'Sun Glo',
           selectedSunGloMotorizationOption: `Default`,
           selectedSunGloConnectionHub:'SG Connector Control Hub',
@@ -311,6 +342,7 @@ class TextileForm extends Component {
         })
       }
     }
+
     return roomTotal.toFixed(2);
   }
   _calculateWindowTotal(dim, at, vt) {
@@ -417,59 +449,64 @@ class TextileForm extends Component {
   _printForm(form) {
     var text = ``;
     var copy = {...form};
-    var preppedWindows = [];
+
     var preppedRooms = [];
 
     copy.rooms.forEach((r,i)=>{
-
+      var motorAndControl = {}
+      var preppedWindows = [];
       //per room details
-      if(r.showMotorization && r.selectedMotorizationSeries === 'Sun Glo') {
-        r.MotorizationOption = r.selectedMotorizationSeries;
-        delete r.selectedSomfyPowerOption;
-        delete r.selectedSomfyListControls;
-        delete r.selectedSomfyMotorizationOption;
-        delete r.selectedSomfyControlSensorOption;
+      r.MotorizationOption = r.selectedMotorizationSeries;
 
+      if(r.showMotorization && r.selectedMotorizationSeries === 'Sun Glo') {
+        motorAndControl["MotorizationSeries"] = r.selectedMotorizationSeries
+        motorAndControl["Sun Glo Motorization"] = r.selectedSunGloMotorizationOption;
+        motorAndControl["Sun Glo Connection Hub"] = r.selectedSunGloConnectionHub;
+        motorAndControl["Sun Glo Power Control"] = r.selectedSunGloPowerControl;
+        motorAndControl["Sun Glo Remote"] = r.selectedSunGloRemote;
       } else if (r.showMotorization && r.selectedMotorizationSeries === 'Somfy') {
-        delete r.selectedSunGloRemote;
-        delete r.selectedSunGloPowerControl;
-        delete r.selectedSunGloConnectionHub;
-        delete r.selectedSunGloMotorizationOption;
+        motorAndControl["MotorizationSeries"] = r.selectedMotorizationSeries
+        motorAndControl["Somfy Motorization"] = r.selectedSomfyMotorizationOption;
+        motorAndControl["Somfy Power Option"] = r.selectedSomfyPowerOption;
+        //add the somfy extras
         r.extras = r.extras.map(e=> ({
           ...e,
-          price:parseFloat(e.price).toFixed(2)
+          Price:`$${parseFloat(e.price).toFixed(2)}`
 
         }))
       }
+      r.motorsAndControlTotal = `$${r.total.toFixed(2)}`;
 
         r.windows.forEach(w=> {
-          //per window details
-          if(w.showValance) {
-            w.ValanceOption = w.selectedValanceOption;
-          }
-          w.Fabric = w.selectedFabric;
-          w.PriceGroup = w.selectedPriceGroup;
-
-          delete w.id;
-          delete w.showValance;
-          delete r.showMotorization;
-          delete w.selectedMotorization;
-          delete w.selectedValanceOption;
-          delete w.selectedFabric;
           preppedWindows.push({
-            ...w,
-            name:`${r.name}-${w.name}`,
+            Id: w.id,
+            Name:`${r.name}-${w.name}`,
+            Description:w.description,
+            Fabric:w.selectedFabric,
+            "Price Group":w.selectedPriceGroup,
+            "Valance": w.showValance ? w.selectedValanceOption : 'None',
+            "Window Total":`$${w.total.toFixed(2)}`,
           });
         })
-        preppedRooms.preppedWindows = preppedWindows;
+
+      preppedRooms.push({
+        Id:r.id,
+        Name:`${r.name}`,
+        Description:r.description,
+        windows:preppedWindows,
+        "Cord Placement": r.selectedCordPlacement,
+        ...motorAndControl,
+        "Motor, Sensor and Controls Total": `$${r.total}`,
+        "Room Subtotal": `$${( r.total + r.windows.reduce((sum,w)=>sum=sum+w.total,0) ).toFixed(2)}`
+      })
+
     });
 
-
     return {
-      projectId: form.projectId,
-      clientName: form.clientName,
-      rooms:preppedRooms,
-      grandTotal: this._calculateGrandTotal(),
+      "Project ID": form.projectId,
+      "Client Name": form.clientName,
+      Rooms:preppedRooms,
+      "Project Total":`$${this._calculateGrandTotal()}`,
     }
   }
 
@@ -501,9 +538,11 @@ class TextileForm extends Component {
     const windowTotal = this._calculateWindowTotal(this.props.form.rooms[this.props.form.selectedRoom].windows[this.props.form.selectedWindow].dimensions, activeTable, valanceTable);
     this.props.form.rooms[this.props.form.selectedRoom].windows[this.props.form.selectedWindow].total = parseFloat(windowTotal);  //hardset formstate
 
-    const roomTotal = this._calculateRoomTotal(this.props.form.rooms[this.props.form.selectedRoom])
+
+    const roomTotal = this._calculateRoomTotal(this.props.form.rooms[this.props.form.selectedRoom]) //the extras
     this.props.form.rooms[this.props.form.selectedRoom].total = parseFloat(roomTotal);
-    const roomSubTotal = parseFloat(windowTotal) + parseFloat(roomTotal);
+
+    const roomSubTotal = (parseFloat(roomTotal) + this.props.form.rooms[this.props.form.selectedRoom].windows.reduce((sum,w)=>sum=sum+w.total,0)).toFixed(2)  ;  //room extras + windo totals
 
     const grandTotal = this._calculateGrandTotal();
 
@@ -520,8 +559,8 @@ class TextileForm extends Component {
     return (
         <div className={classes.root}>
           <Typography className={classes.typography} variant="title">Interactive Pricing Form</Typography>
-          <Typography className={classes.typography} variant="subtitle1">Project Id.: {this.props.form.projectId}</Typography>
-          <TextField id="client-name" label="Client Name" value={this.props.form.clientName} onChange={this._handleChange.bind(this)}/>
+          <div><TextField id="project-id" label="Project ID" value={this.props.form.projectId} onChange={this._handleChange.bind(this)}/></div>
+          <div><TextField id="client-name" label="Client Name" value={this.props.form.clientName} onChange={this._handleChange.bind(this)}/></div>
 
           <div className={classes.column}>
             <RoomPanel handleClick={this._handleClick.bind(this)} handleChange={this._handleChange.bind(this)} rooms={this.props.form.rooms} selectedRoom={this.props.form.selectedRoom}/>
@@ -613,6 +652,11 @@ class TextileForm extends Component {
           disabled={currentWindow.selectedBlindType === 'Vision' ? true : false}
           window={currentWindow}
           handleChange={this._handleChange.bind(this)}/>
+
+        <div>
+          <Typography variant="display1"><b>Current Window Total:</b> ${windowTotal} </Typography>
+        </div>
+
 
         {/* Motorization Panel*/}
         <div>
@@ -722,7 +766,7 @@ class TextileForm extends Component {
           </div>
           {
             this.props.form.rooms[this.props.form.selectedRoom].extras.length > 0 &&
-            this.props.form.rooms[this.form.selectedRoom].extras.map(extra=>{
+            this.props.form.rooms[this.props.form.selectedRoom].extras.map(extra=>{
               return (
                 <Chip
                   id="removeExtra"
@@ -739,7 +783,6 @@ class TextileForm extends Component {
 
 
           <div>
-            <Typography variant="display1"><b>Current Window Total:</b> ${windowTotal} </Typography>
             <Typography variant="display1"><b>Motorization/Control Totals:</b> ${roomTotal} </Typography>
             <Typography variant="display1"><b>Room Subtotal:</b> ${roomSubTotal} </Typography>
           </div>

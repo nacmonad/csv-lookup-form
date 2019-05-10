@@ -201,7 +201,6 @@ const initialState = {
       selectedSomfyMotorizationOption: `Roller Shade, Interlude, Illusions - R28`,
       selectedSomfyPowerOption: `12V Reloadable Lithium Battery Tube`,
       selectedSomfyControlSensorOption: `Telis 1 Channel RTS Remote Pure`,
-      selectedSomfyListControls:[],
       selectedMotorizationSeries:'Sun Glo',
       selectedSunGloMotorizationOption: `Default`,
       selectedSunGloConnectionHub:'SG Connector Control Hub',
