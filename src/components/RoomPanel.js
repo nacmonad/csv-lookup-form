@@ -56,6 +56,7 @@ class RoomPanel extends Component {
 
   render(){
     const {classes, handleClick, handleChange, rooms, selectedRoom} = this.props;
+    console.log("selectedRoom: " + selectedRoom)
     return (
       <div className={classes.root} >
         <div className={classNames(classes.row, classes.descriptionField)}>

@@ -19,8 +19,7 @@ const styles = {
 
 export default withStyles(styles)((props) => {
     const {classes, dimensions, handleChange, maxWidth, maxHeight} = props;
-    console.log(maxWidth)
-    console.log(maxHeight)
+  
     return (
     <div className={classes.root} style={{paddingTop:'1.5rem'}}>
         <TextField

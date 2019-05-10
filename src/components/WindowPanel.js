@@ -57,6 +57,7 @@ class WindowPanel extends Component {
 
   render(){
     const {classes, handleClick, handleChange, windows, selectedWindow} = this.props;
+    console.log("selectedWindow: " + selectedWindow)
     return (
       <div className={classes.root} >
         <div className={classNames(classes.row, classes.descriptionField)}>

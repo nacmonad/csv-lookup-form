@@ -72,7 +72,8 @@ class TextileForm extends Component {
   constructor(){
     super();
     this._handleChange = this._handleChange.bind(this)
-    this._calculateTotal = this._calculateTotal.bind(this)
+    this._calculateWindowTotal = this._calculateWindowTotal.bind(this)
+    this._calculateRoomTotal = this._calculateRoomTotal.bind(this)
     this._calculateGrandTotal = this._calculateGrandTotal.bind(this)
 
   }
@@ -81,8 +82,6 @@ class TextileForm extends Component {
     console.log(e.target.value)
     console.log(v)
     let formCopy = {...this.props.form}
-    console.log('FORMCOPY')
-    console.log(formCopy)
     //let thisWindow = formCopy.rooms[formCopy.selectedRoom].windows[formCopy.selectedWindow];
     switch(e.target.id) {
       case "selectedsomfypoweroption":
@@ -181,7 +180,10 @@ class TextileForm extends Component {
       default:
         console.log("unhandled ")
         console.log(e.target)
+        break;
     }
+    console.log("setting new formcopy:")
+    console.log(formCopy)
     this.props.setForm(formCopy)
 
   }
@@ -193,11 +195,8 @@ class TextileForm extends Component {
     switch(e.target.id) {
       case "removeExtra":
         let i = formCopy.rooms[formCopy.selectedRoom].extras.findIndex(ext=>ext.type === v);
-
         formCopy.rooms[formCopy.selectedRoom].extras.splice(i,1);
-
         this.props.setForm(formCopy)
-
         break;
       case "download-form":
         this.props.downloadFormRequested(this._printForm(formCopy));
@@ -216,87 +215,105 @@ class TextileForm extends Component {
 
         break;
       case "add-room":
+        formCopy.selectedRoom = parseInt(formCopy.selectedRoom) + 1;
+        formCopy.selectedWindow = 0;
         formCopy.rooms.push({
           id:shortid.generate(),
           name:`Room ${formCopy.rooms.length+1}`,
           description: ``,
           windows:[{
             id:shortid.generate(),
-            name:`Window ${formCopy.rooms[formCopy.selectedRoom].windows.length+1}`,
+            name:`Window 1`,
             description: ``,
             dimensions: {
               units: 'inches',
               width:30,
               height:30
             },
-            extras:[],
             selectedValanceOption:'Decora 8',
             selectedBlindType:'Roller',
-            selectedFabric: formCopy.rooms[formCopy.selectedRoom].windows[formCopy.rooms[formCopy.selectedRoom].windows.length-1].selectedFabric,
+            selectedFabric: 'Cottonwood',
             selectedHem:'Plain Hem',
             selectedHemColor:'White',
             selectedEndCap:'Grey',
-            selectedSomfyMotorizationOption: `Roller Shade, Interlude, Illusions - R28`,
-            selectedSomfyPowerOption: `12V Reloadable Lithium Battery Tube`,
-            selectedSomfyControlSensorOption: `Telis 1 Channel RTS Remote Pure`,
-            selectedSomfyListControls:[],
-            selectedMotorizationSeries:'Sun Glo',
-            selectedSunGloMotorizationOption: `Default`,
-            selectedSunGloConnectionHub:'SG Connector Control Hub',
             selectedPriceGroup:'PG1',
-            showMotorization:false,
-            selectedCordPlacement: 'Left',
             showValance:false,
             total:155.95
           }],
           showMotorization:false,
+          selectedCordPlacement: 'Left',
           selectedSomfyMotorizationOption: `Roller Shade, Interlude, Illusions - R28`,
           selectedSomfyPowerOption: `12V Reloadable Lithium Battery Tube`,
           selectedSomfyControlSensorOption: `Telis 1 Channel RTS Remote Pure`,
           selectedSomfyListControls:[],
           selectedMotorizationSeries:'Sun Glo',
           selectedSunGloMotorizationOption: `Default`,
-          selectedSunGloConnectionHub:'None',
+          selectedSunGloConnectionHub:'SG Connector Control Hub',
           selectedSunGloPowerControl:'SG DC Charger',
           selectedSunGloRemote:'SG 1 Channel Standard',
           extras:[],
+          total: 0
         })
         this.props.setForm(formCopy)
-
         break;
       case "add-window":
+      //adding windows within the room maintains the previous windows' props
+      console.log("adding window")
+      formCopy.selectedWindow += 1;
+      console.log(formCopy.selectedWindow)
         formCopy.rooms[formCopy.selectedRoom].windows.push({
           id:shortid.generate(),
           name:`Window ${formCopy.rooms[formCopy.selectedRoom].windows.length+1}`,
           description: ``,
           dimensions: {
-            units: 'inches',
-            width:30,
-            height:30
+            units: formCopy.rooms[formCopy.selectedRoom].windows[formCopy.rooms[formCopy.selectedRoom].windows.length-1].dimensions.units,
+            width:formCopy.rooms[formCopy.selectedRoom].windows[formCopy.rooms[formCopy.selectedRoom].windows.length-1].dimensions.width,
+            height:formCopy.rooms[formCopy.selectedRoom].windows[formCopy.rooms[formCopy.selectedRoom].windows.length-1].dimensions.height
           },
-          extras:[],
-          selectedValanceOption:'Decora 8',
-          selectedBlindType:'Roller',
+          selectedValanceOption:formCopy.rooms[formCopy.selectedRoom].windows[formCopy.rooms[formCopy.selectedRoom].windows.length-1].selectedValanceOption,
+          selectedBlindType:formCopy.rooms[formCopy.selectedRoom].windows[formCopy.rooms[formCopy.selectedRoom].windows.length-1].selectedBlindType,
           selectedFabric: formCopy.rooms[formCopy.selectedRoom].windows[formCopy.rooms[formCopy.selectedRoom].windows.length-1].selectedFabric,
-          selectedHem:'Plain Hem',
-          selectedHemColor:'White',
-          selectedEndCap:'Grey',
-          showValance:false,
-          total:155.95
+          selectedHem:formCopy.rooms[formCopy.selectedRoom].windows[formCopy.rooms[formCopy.selectedRoom].windows.length-1].selectedHem,
+          selectedHemColor:formCopy.rooms[formCopy.selectedRoom].windows[formCopy.rooms[formCopy.selectedRoom].windows.length-1].selectedHemColor,
+          selectedEndCap:formCopy.rooms[formCopy.selectedRoom].windows[formCopy.rooms[formCopy.selectedRoom].windows.length-1].selectedEndCap,
+          selectedPriceGroup:formCopy.rooms[formCopy.selectedRoom].windows[formCopy.rooms[formCopy.selectedRoom].windows.length-1].selectedPriceGroup,
+          showValance:formCopy.rooms[formCopy.selectedRoom].windows[formCopy.rooms[formCopy.selectedRoom].windows.length-1].showValance,
+          total:formCopy.rooms[formCopy.selectedRoom].windows[formCopy.rooms[formCopy.selectedRoom].windows.length-1].total
         })
-        this.props.setForm(formCopy)
 
+        this.props.setForm(formCopy)
         break;
       default:
         console.log("unhandled " + e.target.id)
+        break;
     }
+
   }
-  _calculateTotal(dim, at, vt) {
-    //this is bound to the scope!
-    console.log("calculatin ")
-    console.log(dim)
-    console.log(at)
-    console.log(vt)
+  _calculateRoomTotal(room) {
+    let roomTotal = 0.00;
+
+    // //add per room motorization and extras costs
+    if(room.showMotorization) {
+      if(room.selectedMotorizationSeries === 'Sun Glo') {
+        roomTotal += 360.00 //default sunglo rechargeable motor  this should be its own object in the form state
+        roomTotal += this.props.form.connectionHubOptions.find(ch=>ch.type === room.selectedSunGloConnectionHub).price;
+        roomTotal += this.props.form.remoteOptions.find(ro=>ro.type === room.selectedSunGloRemote).price;
+        roomTotal += this.props.form.powerControlOptions.find(pc=>pc.type === room.selectedSunGloPowerControl).price;
+      }
+      if(room.selectedMotorizationSeries === 'Somfy') {
+        let motorCode = this.props.form.SomfyMotorOptions.find(mo=>mo.type === room.selectedSomfyMotorizationOption).code
+
+        roomTotal += this.props.form.SomfyMotorOptions.find(mo=>mo.type === room.selectedSomfyMotorizationOption).price;
+        roomTotal += this.props.form.SomfyPowerOptions[motorCode].find(po=>po.type === room.selectedSomfyPowerOption).price;
+        /* Control Sensor Options & Extra Items -- Should adapt and abstract this! */
+        room.extras.forEach(extra=>{
+          roomTotal += extra.price;
+        })
+      }
+    }
+    return roomTotal.toFixed(2);
+  }
+  _calculateWindowTotal(dim, at, vt) {
 
     //UNIT CONVERSION
     let textileWidthInInches;
@@ -352,9 +369,7 @@ class TextileForm extends Component {
 
         //TODO: dont do this!
         //if(this.props.form.rooms[this.props.form.selectedRoom].windows[this.props.form.selectedWindow].selectedValanceOption === '') this.props.form.rooms[this.props.form.selectedRoom].windows[this.props.form.selectedWindow].selectedValanceOption = vt[1][0]
-        console.log("making valance tables")
-        console.log(tableHeight)
-        console.log(vt)
+        console.log("constructing allowable valance tables for option")
         for(var i =1; i< tableHeight; i++ ) {
           //console.log()
           //console.log(vt[i][0] + " compared to " + this.props.form.selectedValanceOption)
@@ -376,18 +391,15 @@ class TextileForm extends Component {
       }
     }
 
-
-
-
-
     return windowTotal.toFixed(2);
   }
   _calculateGrandTotal(){
 
     let windows = []
+    let rooms = [...this.props.form.rooms]
     let grandTotal = 0.00;
 
-    //get each window's total
+    //destructure all windows into one array
     if(this.props.form.rooms.length > 1) {
       windows = this.props.form.rooms.reduce((w,r2)=>{
         return [...w, ...r2.windows];
@@ -397,136 +409,123 @@ class TextileForm extends Component {
       //grandTotal = windowTotal
     }
 
-    //add per room motorization costs
-    this.props.form.rooms.forEach((r,i)=>{
-      if(r.showMotorization) {
-        if(r.selectedMotorizationSeries === 'Sun Glo') {
-          grandTotal += 360.00 //default sunglo rechargeable motor  this should be its own object in the form state
-          grandTotal += this.props.form.connectionHubOptions.find(ch=>ch.type === r.selectedSunGloConnectionHub).price;
-          grandTotal += this.props.form.remoteOptions.find(ro=>ro.type === r.selectedSunGloRemote).price;
-          grandTotal += this.props.form.powerControlOptions.find(pc=>pc.type === r.selectedSunGloPowerControl).price;
-
-          // windowTotal += this.props.form.powerControlOptions.find(pc=>pc.type === r.windows[this.props.form.selectedWindow].selectedSunGloPowerControl).price;
-          // windowTotal += this.props.form.remoteOptions.find(ro=>ro.type === r.windows[this.props.form.selectedWindow].selectedSunGloRemote).price;
-        }
-        if(r.selectedMotorizationSeries === 'Somfy') {
-          let motorCode = this.props.form.SomfyMotorOptions.find(mo=>mo.type === r.selectedSomfyMotorizationOption).code
-
-          grandTotal += this.props.form.SomfyMotorOptions.find(mo=>mo.type === r.selectedSomfyMotorizationOption).price;
-          grandTotal += this.props.form.SomfyPowerOptions[motorCode].find(po=>po.type === r.selectedSomfyPowerOption).price;
-          /* Control Sensor Options & Extra Items -- Should adapt and abstract this! */
-          r.extras.forEach(extra=>{
-            grandTotal += extra.price;
-          })
-        }
-      }
-    });
-
-
-
-    grandTotal += parseFloat(windows.reduce((sum,w)=>sum+w.total, 0))
+    grandTotal += parseFloat(windows.reduce((sum,w)=>sum+w.total, 0)) + parseFloat(rooms.reduce((sum,r)=>sum+r.total,0))
 
     return grandTotal.toFixed(2);
   }
 
   _printForm(form) {
     var text = ``;
-    var copy = {...form}
+    var copy = {...form};
     var preppedWindows = [];
+    var preppedRooms = [];
 
     copy.rooms.forEach((r,i)=>{
-      r.windows.forEach(w=> {
 
-        if(w.showValance) {
-          w.ValanceOption = w.selectedValanceOption;
-        }
-        if(r.showMotorization && w.selectedMotorizationSeries === 'Sun Glo') {
-          w.MotorizationOption = w.selectedMotorizationSeries;
-          delete w.selectedSomfyPowerOption;
-          delete w.selectedSomfyListControls;
-          delete w.selectedSomfyMotorizationOption;
-          delete w.selectedSomfyControlSensorOption;
+      //per room details
+      if(r.showMotorization && r.selectedMotorizationSeries === 'Sun Glo') {
+        r.MotorizationOption = r.selectedMotorizationSeries;
+        delete r.selectedSomfyPowerOption;
+        delete r.selectedSomfyListControls;
+        delete r.selectedSomfyMotorizationOption;
+        delete r.selectedSomfyControlSensorOption;
 
-        } else if (r.showMotorization && w.selectedMotorizationSeries === 'Somfy') {
-          delete w.selectedSunGloRemote;
-          delete w.selectedSunGloPowerControl;
-          delete w.selectedSunGloConnectionHub;
-          delete w.selectedSunGloMotorizationOption;
-          w.extras = w.extras.map(e=> ({
-            ...e,
-            price:parseFloat(e.price).toFixed(2)
+      } else if (r.showMotorization && r.selectedMotorizationSeries === 'Somfy') {
+        delete r.selectedSunGloRemote;
+        delete r.selectedSunGloPowerControl;
+        delete r.selectedSunGloConnectionHub;
+        delete r.selectedSunGloMotorizationOption;
+        r.extras = r.extras.map(e=> ({
+          ...e,
+          price:parseFloat(e.price).toFixed(2)
 
-          }))
-        }
-        w.Fabric = w.selectedFabric;
-        w.PriceGroup = w.selectedPriceGroup;
+        }))
+      }
 
-        delete w.id;
-        delete w.showValance;
-        delete r.showMotorization;
-        delete w.selectedMotorization;
-        delete w.selectedValanceOption;
-        delete w.selectedFabric;
-        preppedWindows.push({
-          ...w,
-          name:`${r.name}-${w.name}`,
-        });
-      }) });
+        r.windows.forEach(w=> {
+          //per window details
+          if(w.showValance) {
+            w.ValanceOption = w.selectedValanceOption;
+          }
+          w.Fabric = w.selectedFabric;
+          w.PriceGroup = w.selectedPriceGroup;
+
+          delete w.id;
+          delete w.showValance;
+          delete r.showMotorization;
+          delete w.selectedMotorization;
+          delete w.selectedValanceOption;
+          delete w.selectedFabric;
+          preppedWindows.push({
+            ...w,
+            name:`${r.name}-${w.name}`,
+          });
+        })
+        preppedRooms.preppedWindows = preppedWindows;
+    });
+
 
     return {
       projectId: form.projectId,
       clientName: form.clientName,
-      windows:preppedWindows,
+      rooms:preppedRooms,
       grandTotal: this._calculateGrandTotal(),
     }
   }
 
   render () {
-    const {classes, form, workbook} = this.props
+    console.log('RW: ' + this.props.form.selectedRoom + ', ' + this.props.form.selectedWindow)
+    const {classes,  workbook} = this.props
     let activeTable = []
     let valanceTable = []
 
-    if(typeof workbook.Sheets[form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedBlindType] !== 'undefined' && form.priceGroups.findIndex(pg=>form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedPriceGroup) > -1) {
-      const index = form.priceGroups.findIndex(pg=>pg===form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedPriceGroup);
-      const rangeString = form.priceGroupMap[index]
+    if(typeof workbook.Sheets[this.props.form.rooms[this.props.form.selectedRoom].windows[this.props.form.selectedWindow].selectedBlindType] !== 'undefined' && this.props.form.priceGroups.findIndex(pg=>this.props.form.rooms[this.props.form.selectedRoom].windows[this.props.form.selectedWindow].selectedPriceGroup) > -1) {
+      const index = this.props.form.priceGroups.findIndex(pg=>pg===this.props.form.rooms[this.props.form.selectedRoom].windows[this.props.form.selectedWindow].selectedPriceGroup);
+      const rangeString = this.props.form.priceGroupMap[index]
 
-      activeTable = parseTableFromRange(rangeString, workbook.Sheets[form.rooms[form.selectedRoom].windows[form.selectedWindow].selectedBlindType])
+      activeTable = parseTableFromRange(rangeString, workbook.Sheets[this.props.form.rooms[this.props.form.selectedRoom].windows[this.props.form.selectedWindow].selectedBlindType])
 
-      if(form.rooms[form.selectedRoom].windows[form.selectedWindow].showValance) {
+      if(this.props.form.rooms[this.props.form.selectedRoom].windows[this.props.form.selectedWindow].showValance) {
         console.log("fetching valance table...")
-        console.log(form.selectedValance)
-        const vindex = form.valances.findIndex(v=>v===form.selectedValance)
+        console.log(this.props.form.selectedValance)
+        const vindex = this.props.form.valances.findIndex(v=>v===this.props.form.selectedValance)
         console.log(vindex)
-        const valanceRangeString = form.valanceMap[vindex]
+        const valanceRangeString = this.props.form.valanceMap[vindex]
         console.log(valanceRangeString)
-        valanceTable = parseTableFromRange(valanceRangeString, workbook.Sheets[form.selectedValance]);
+        valanceTable = parseTableFromRange(valanceRangeString, workbook.Sheets[this.props.form.selectedValance]);
       }
 
     }
 
-    //var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
-    //   var json_object = JSON.stringify(XL_row_object);
+    //THIS SHOULD BE HANDLED IN REDUCER, AS THIS SETS THE TOTALS IN THE PROP
+    const windowTotal = this._calculateWindowTotal(this.props.form.rooms[this.props.form.selectedRoom].windows[this.props.form.selectedWindow].dimensions, activeTable, valanceTable);
+    this.props.form.rooms[this.props.form.selectedRoom].windows[this.props.form.selectedWindow].total = parseFloat(windowTotal);  //hardset formstate
 
-    const windowTotal = this._calculateTotal(form.rooms[form.selectedRoom].windows[form.selectedWindow].dimensions, activeTable, valanceTable);
-    form.rooms[form.selectedRoom].windows[form.selectedWindow].total = parseFloat(windowTotal);  //hardset formstate
+    const roomTotal = this._calculateRoomTotal(this.props.form.rooms[this.props.form.selectedRoom])
+    this.props.form.rooms[this.props.form.selectedRoom].total = parseFloat(roomTotal);
+    const roomSubTotal = parseFloat(windowTotal) + parseFloat(roomTotal);
 
     const grandTotal = this._calculateGrandTotal();
 
+    let currentWindow = this.props.form.rooms[this.props.form.selectedRoom].windows[this.props.form.selectedWindow];
+    console.log('motorcode fetch')
+    console.log(this.props.form.SomfyMotorOptions)
+    let motorCode = 'SMB3'; //default dummy to avoid error
+    if(this.props.form.rooms[this.props.form.selectedRoom].showMotorization && this.props.form.rooms[this.props.form.selectedRoom].selectedMotorizationSeries === 'Somfy') {
+      motorCode = this.props.form.SomfyMotorOptions.find(mo=>mo.type === this.props.form.rooms[this.props.form.selectedRoom].selectedSomfyMotorizationOption).code
+    }
 
-    let currentWindow = form.rooms[form.selectedRoom].windows[form.selectedWindow];
 
-    let motorCode = form.SomfyMotorOptions.find(mo=>mo.type === form.rooms[form.selectedRoom].selectedSomfyMotorizationOption).code
 
-    console.log("MOTORCODE: " + motorCode)
     return (
         <div className={classes.root}>
           <Typography className={classes.typography} variant="title">Interactive Pricing Form</Typography>
-          <Typography className={classes.typography} variant="subtitle1">Project Id.: {form.projectId}</Typography>
-          <TextField id="client-name" label="Client Name" value={form.clientName} onChange={this._handleChange.bind(this)}/>
+          <Typography className={classes.typography} variant="subtitle1">Project Id.: {this.props.form.projectId}</Typography>
+          <TextField id="client-name" label="Client Name" value={this.props.form.clientName} onChange={this._handleChange.bind(this)}/>
 
           <div className={classes.column}>
-            <RoomPanel handleClick={this._handleClick.bind(this)} handleChange={this._handleChange.bind(this)} rooms={form.rooms} selectedRoom={form.selectedRoom}/>
-            <WindowPanel handleClick={this._handleClick.bind(this)} handleChange={this._handleChange.bind(this)} windows={form.rooms[form.selectedRoom].windows} selectedWindow={form.selectedWindow}/>
+            <RoomPanel handleClick={this._handleClick.bind(this)} handleChange={this._handleChange.bind(this)} rooms={this.props.form.rooms} selectedRoom={this.props.form.selectedRoom}/>
+            <WindowPanel handleClick={this._handleClick.bind(this)} handleChange={this._handleChange.bind(this)} windows={this.props.form.rooms[this.props.form.selectedRoom].windows} selectedWindow={this.props.form.selectedWindow}/>
 
           </div>
           <div>
@@ -563,8 +562,8 @@ class TextileForm extends Component {
                 <OutlinedDropdown
                   title="Fabric"
                   helperText="Select a Fabric"
-                  items={/*this.props.form.selectedBlindType === 'Interlude' ? this.props.form.priceGroups.slice(0,4) : this.props.form.priceGroups*/
-                    Object.keys(form.fabricToPriceGroupMapping)
+                  items={/*this.props.this.props.form.selectedBlindType === 'Interlude' ? this.props.this.props.form.priceGroups.slice(0,4) : this.props.this.props.form.priceGroups*/
+                    Object.keys(this.props.form.fabricToPriceGroupMapping)
                   }
                   selectedItem={currentWindow.selectedFabric}
                   handleChange={this._handleChange.bind(this)}/>
@@ -572,7 +571,7 @@ class TextileForm extends Component {
                   title="PriceGroup"
                   helperText="Select a Price Group"
                   hidden={true}
-                  items={currentWindow.selectedBlindType === 'Interlude' ? form.priceGroups.slice(0,4) : form.priceGroups}
+                  items={currentWindow.selectedBlindType === 'Interlude' ? this.props.form.priceGroups.slice(0,4) : this.props.form.priceGroups}
                   selectedItem={currentWindow.selectedPriceGroup}
                   handleChange={this._handleChange.bind(this)}/>
               </div>)
@@ -584,7 +583,7 @@ class TextileForm extends Component {
                 <OutlinedDropdown
                   title="SelectedHem"
                   helperText="Select a Hembar type"
-                  items={form.hembars}
+                  items={this.props.form.hembars}
                   selectedItem={currentWindow.selectedHem}
                   handleChange={this._handleChange.bind(this)}/>
             </div>
@@ -593,7 +592,7 @@ class TextileForm extends Component {
                 <OutlinedDropdown
                   title="SelectedHemColor"
                   helperText="Select a Hem Bar Colour"
-                  items={form.hemColorOptions}
+                  items={this.props.form.hemColorOptions}
                   selectedItem={currentWindow.selectedHemColor}
                   handleChange={this._handleChange.bind(this)}/>
             </div>
@@ -602,7 +601,7 @@ class TextileForm extends Component {
                 <OutlinedDropdown
                   title="SelectedEndCap"
                   helperText="Select an End Cap colour"
-                  items={form.endCapOptions}
+                  items={this.props.form.endCapOptions}
                   selectedItem={currentWindow.selectedEndCap}
                   handleChange={this._handleChange.bind(this)}/>
             </div>
@@ -610,36 +609,36 @@ class TextileForm extends Component {
         {/* Valance Panel */}
 
         <AddValanceOption
-          form={form}
+          form={this.props.form}
           disabled={currentWindow.selectedBlindType === 'Vision' ? true : false}
           window={currentWindow}
           handleChange={this._handleChange.bind(this)}/>
 
         {/* Motorization Panel*/}
         <div>
-          <InputLabel>{form.rooms[form.selectedRoom].showMotorization ? `Remove Motorization` : `Add Motorization`}</InputLabel>
+          <InputLabel>{this.props.form.rooms[this.props.form.selectedRoom].showMotorization ? `Remove Motorization` : `Add Motorization`}</InputLabel>
           <Checkbox
             id="show-motorization"
-            checked={form.rooms[form.selectedRoom].showMotorization}
+            checked={this.props.form.rooms[this.props.form.selectedRoom].showMotorization}
             onChange={this._handleChange.bind(this)}
-            value={form.rooms[form.selectedRoom].selectedMotorizationSeries}
+            value={this.props.form.rooms[this.props.form.selectedRoom].selectedMotorizationSeries}
           />
         </div>
 
           <div className={classes.row} style={{alignItems:'baseline'}}>
             {
-              form.rooms[form.selectedRoom].showMotorization && (
+              this.props.form.rooms[this.props.form.selectedRoom].showMotorization && (
                 <div>
                   <div>
                     <InputLabel>Room Motorization Option</InputLabel>
                     <OutlinedDropdown
                       title="selectedMotorizationSeries"
                       helperText="Select a Motorization Series"
-                      items={form.motorizationSeries}
-                      selectedItem={form.rooms[form.selectedRoom].selectedMotorizationSeries}
+                      items={this.props.form.motorizationSeries}
+                      selectedItem={this.props.form.rooms[this.props.form.selectedRoom].selectedMotorizationSeries}
                       handleChange={this._handleChange.bind(this)}/>
                   </div>
-                  { form.rooms[form.selectedRoom].selectedMotorizationSeries === 'Sun Glo' &&
+                  { this.props.form.rooms[this.props.form.selectedRoom].selectedMotorizationSeries === 'Sun Glo' &&
                     <div>
                     <Typography variant="subtitle1">Sun Glo Options </Typography>
                     <div className={classes.row}>
@@ -648,8 +647,8 @@ class TextileForm extends Component {
                           <OutlinedDropdown
                             title="SelectedSunGloConnectionHub"
                             helperText="Select a Connection Hub"
-                            items={form.connectionHubOptions.map(o=>o.type)}
-                            selectedItem={form.rooms[form.selectedRoom].selectedSunGloConnectionHub}
+                            items={this.props.form.connectionHubOptions.map(o=>o.type)}
+                            selectedItem={this.props.form.rooms[this.props.form.selectedRoom].selectedSunGloConnectionHub}
                             handleChange={this._handleChange.bind(this)}/>
                       </div>
 
@@ -658,8 +657,8 @@ class TextileForm extends Component {
                           <OutlinedDropdown
                             title="SelectedSunGloPowerControl"
                             helperText="Select a Power control type"
-                            items={form.powerControlOptions.map(o=>o.type)}
-                            selectedItem={form.rooms[form.selectedRoom].selectedSunGloPowerControl}
+                            items={this.props.form.powerControlOptions.map(o=>o.type)}
+                            selectedItem={this.props.form.rooms[this.props.form.selectedRoom].selectedSunGloPowerControl}
                             handleChange={this._handleChange.bind(this)}/>
                       </div>
 
@@ -668,15 +667,15 @@ class TextileForm extends Component {
                           <OutlinedDropdown
                             title="SelectedSunGloRemote"
                             helperText="Select a Remote type"
-                            items={form.remoteOptions.map(o=>o.type)}
-                            selectedItem={form.rooms[form.selectedRoom].selectedSunGloRemote}
+                            items={this.props.form.remoteOptions.map(o=>o.type)}
+                            selectedItem={this.props.form.rooms[this.props.form.selectedRoom].selectedSunGloRemote}
                             handleChange={this._handleChange.bind(this)}/>
                       </div>
                     </div>
                   </div>
                   }
 
-                  { form.rooms[form.selectedRoom].selectedMotorizationSeries === 'Somfy' &&
+                  { this.props.form.rooms[this.props.form.selectedRoom].selectedMotorizationSeries === 'Somfy' &&
                     <div>
                       <Typography variant="subtitle1">Somfy Options </Typography>
                       <div className={classes.row}>
@@ -684,22 +683,22 @@ class TextileForm extends Component {
                             title="SelectedSomfyMotorizationOption"
                             helperText="Select a Motor option"
                             handleChange={this._handleChange.bind(this)}
-                            selectedItem={form.rooms[form.selectedRoom].selectedSomfyMotorizationOption}
-                            items={form.SomfyMotorOptions.map(o=>o.type)}
+                            selectedItem={this.props.form.rooms[this.props.form.selectedRoom].selectedSomfyMotorizationOption}
+                            items={this.props.form.SomfyMotorOptions.map(o=>o.type)}
                             />
                           <OutlinedDropdown
                             title="SelectedSomfyPowerOption"
                             helperText="Select a Power option"
                             handleChange={this._handleChange.bind(this)}
-                            selectedItem={form.rooms[form.selectedRoom].selectedSomfyPowerOption}
-                            items={form.SomfyPowerOptions[motorCode].map(o=>o.type)}
+                            selectedItem={this.props.form.rooms[this.props.form.selectedRoom].selectedSomfyPowerOption}
+                            items={this.props.form.SomfyPowerOptions[motorCode].map(o=>o.type)}
                             />
                           <OutlinedDropdown
                             title="SelectedSomfyControlSensorOption"
                             helperText="Add controls and sensors"
                             handleChange={this._handleChange.bind(this)}
-                            selectedItem={form.rooms[form.selectedRoom].selectedSomfyControlSensorOption}
-                            items={form.SomfyControlSensorOptions.map(o=>o.type)}
+                            selectedItem={this.props.form.rooms[this.props.form.selectedRoom].selectedSomfyControlSensorOption}
+                            items={this.props.form.SomfyControlSensorOptions.map(o=>o.type)}
                             />
                       </div>
                     </div>
@@ -708,22 +707,22 @@ class TextileForm extends Component {
               )
             }
             {
-              !form.rooms[form.selectedRoom].showMotorization && (
+              !this.props.form.rooms[this.props.form.selectedRoom].showMotorization && (
                 <div style={{paddingTop:'0.75rem'}}>
                   <InputLabel>Cord Placement</InputLabel>
                   <OutlinedDropdown
                     title="cordPlacement"
                     helperText="Select a Cord Placement"
-                    items={form.cordPlacements}
-                    selectedItem={form.rooms[form.selectedRoom].selectedCordPlacement}
+                    items={this.props.form.cordPlacements}
+                    selectedItem={this.props.form.rooms[this.props.form.selectedRoom].selectedCordPlacement}
                     handleChange={this._handleChange.bind(this)}/>
                 </div>)
             }
 
           </div>
           {
-            form.rooms[form.selectedRoom].extras.length > 0 &&
-            form.rooms[form.selectedRoom].extras.map(extra=>{
+            this.props.form.rooms[this.props.form.selectedRoom].extras.length > 0 &&
+            this.props.form.rooms[this.form.selectedRoom].extras.map(extra=>{
               return (
                 <Chip
                   id="removeExtra"
@@ -741,9 +740,11 @@ class TextileForm extends Component {
 
           <div>
             <Typography variant="display1"><b>Current Window Total:</b> ${windowTotal} </Typography>
+            <Typography variant="display1"><b>Motorization/Control Totals:</b> ${roomTotal} </Typography>
+            <Typography variant="display1"><b>Room Subtotal:</b> ${roomSubTotal} </Typography>
           </div>
           <div className={classes.row}>
-            <Typography variant="display2"><b>Total:</b> {
+            <Typography variant="display2"><b>Project Total:</b> {
               `$${grandTotal}`
           } </Typography>
         <IconButton id="download-form" disabled={windowTotal === -1} onClick={(e)=>{this._handleClick({target:{id:'download-form'}})}} color="primary" className={classes.button} aria-label="Add to shopping cart" size="large">
@@ -753,7 +754,7 @@ class TextileForm extends Component {
           <div className={classes.row}>
             {grandTotal.toString() === 'NaN' &&
               <div >
-                <Typography variant="subtitle1" color="secondary">Error: You picked an unavailable dimension.</Typography>
+                <Typography variant="subtitle1" color="secondary">Error: You might have picked an unavailable dimension.</Typography>
               </div>}
             {grandTotal === -1 &&
               <div >

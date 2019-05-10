@@ -46,7 +46,7 @@ export default withStyles(styles)(
 
     (props)=>{
         const {classes, handleSelect, selectedItem, items} = props;
-        console.log(items)
+
         return (
             <FormControl className={classes.formControl}>
                 <InputLabel htmlFor="select-multiple">Name</InputLabel>

@@ -34,14 +34,11 @@ const styles = {
 }
 export default withStyles(styles)((props)=>{
   const {classes, disabled, form, window, handleChange} = props
-  console.log("v form")
-  console.log(form.valanceOptions)
-  console.log(window.selectedValanceOption)
-  console.log(disabled)
+
   return (
     <div>
       <div className={classes.row}>
-        <Typography variant="subtitle1">Valence Options</Typography>
+        <Typography variant="subtitle1">Valance Options</Typography>
         <Fab id="toggle-valance" disabled={disabled} className={classes.button} onClick={handleChange}>
           {window.showValance ? <RemoveIcon
               onClick={(e)=>{handleChange({target:{id:'toggle-valance', value:e.target.value}})}}

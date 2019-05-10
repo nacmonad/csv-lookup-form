@@ -179,12 +179,12 @@ const initialState = {
         {
           id:shortid.generate(),
           name: 'Window 1',
+          description:``,
           dimensions: {
             units: 'inches',
             height: 30,
             width: 30
           },
-
           selectedValanceOption:'Decora 8',
           selectedBlindType:'Roller',
           selectedFabric:'Cottonwood',

@@ -40,8 +40,7 @@ class OutlinedDropdown extends Component {
   }
   render(){
     const {classes, handleChange, selectedItem, hidden, items, title, helperText} = this.props;
-    console.log(`${title} --> ${selectedItem}`)
-    console.log(items)
+
     return (
       <div className={ hidden ? classes.hidden : classes.root}>
         <TextField

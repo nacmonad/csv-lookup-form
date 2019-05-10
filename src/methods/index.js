@@ -2,7 +2,6 @@ import XLSX from 'xlsx';
 
 export const parseTableFromRange = (rangeString, sheet) => {
      const range = XLSX.utils.decode_range(rangeString);
-     console.log(range)
      var activeTable = [];
      var result = [];
      var row;

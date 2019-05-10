@@ -4,7 +4,7 @@ const initialState = {
 }
 
 const workbook = (state = initialState, action) => {
-  console.log(action)
+
   switch (action.type) {
     case 'WORKBOOK_IMPORT_SUCCESS':
       return {
@@ -12,8 +12,6 @@ const workbook = (state = initialState, action) => {
           ...action.payload
       }
     case 'WORKBOOK_IMPORT_FAIL':
-      console.log("WORKBOOK_IMPORT_FAIL")
-      console.log(action.payload)
       return state;
     default:
       return state
